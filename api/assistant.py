@@ -32,7 +32,12 @@ class Assistant:
 
     def meta_setup(self, use_gameshow_prompt=True) -> None:
         openai.api_key = os.getenv("API_KEY")
-        self.write_message(role="system", content=self.prompt if use_gameshow_prompt else "You are a helpful assistant.")
+        self.write_message(
+            role="system",
+            content=self.prompt
+            if use_gameshow_prompt
+            else "You are a helpful assistant.",
+        )
 
     def get_api_response(self):
         return openai.ChatCompletion.create(
@@ -51,6 +56,7 @@ class Assistant:
         except:
             raise ValueError("Failed to get response content from response object")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     gpt = Assistant()
     print(gpt.prompt)
