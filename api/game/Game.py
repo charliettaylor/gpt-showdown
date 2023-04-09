@@ -59,7 +59,7 @@ class Game:
     #         await self.notify_host(json.dumps(player.dict()))
 
     async def add_player_choice(self, player_id, choice):
-        self.choices[player_id].choice = choice
+        self.choices[player_id] = choice
 
     async def handle_end_game(self):
         self.state = "FINISHED"
@@ -95,10 +95,8 @@ class Game:
                         await sleep(1)
                     return
                 elif state == "QUESTION":
-                    copy.question = [
-                        McQuestionDTO(text=x.question, choices=x.choices)
-                        for x in self.questions[self.current_question_id]
-                    ]
+                    x = self.questions[self.current_question_id]
+                    copy.question = McQuestionDTO(text=x.question, choices=x.choices)
                 elif state == "GAMEOVER":
                     copy.leaderboard = list(
                         sorted(player, lambda x: x.score, reverse=True)
