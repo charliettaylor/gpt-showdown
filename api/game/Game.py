@@ -95,7 +95,10 @@ class Game:
                         await sleep(1)
                     return
                 elif state == "QUESTION":
-                    copy.question = self.questions[self.current_question_id]
+                    copy.question = [
+                        McQuestionDTO(text=x.question, choices=x.choices)
+                        for x in self.questions[self.current_question_id]
+                    ]
                 elif state == "GAMEOVER":
                     copy.leaderboard = list(
                         sorted(player, lambda x: x.score, reverse=True)
