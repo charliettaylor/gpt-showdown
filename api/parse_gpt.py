@@ -1,5 +1,6 @@
 from re import findall
 from random import choice
+import asyncio
 
 from pydantic import parse
 
@@ -7,7 +8,7 @@ kPATTERN = r"\[[A-Za-z]\]"
 kCHOICES = "ABCD"
 
 
-def parse_gpt(gpt_response: str):
+async def parse_gpt(gpt_response: str):
     """
     Parse long-winded GPT responses to single capitalized letters.
     """
@@ -26,7 +27,7 @@ def parse_gpt(gpt_response: str):
     return ans[0][1:-1].upper()
 
 
-def test():
+async def test():
     known_responses = {
         "My chosen answer is [A].": "A",
         "Some stuff, some more stuff 123 [5] my answer is [c]": "C",
@@ -47,7 +48,7 @@ def test():
     ]
 
     for response in random_responses:
-        parsed = parse_gpt(response)
+        parsed = await parse_gpt(response)
         if parsed not in kCHOICES:
             print(f"Failed test: {response}. Got {parsed} should be one of {kCHOICES}")
             continue
@@ -58,4 +59,4 @@ def test():
 
 
 if __name__ == "__main__":
-    test()
+    asyncio.run(test())

@@ -4,7 +4,7 @@ from fastapi import WebSocket
 from .Game import Game, GameID
 from .models import Event, PlayerID
 from ..db import get_questions_by_quiz
-from random import choice
+from random import choice, randint
 from threading import Thread
 import logging
 import sys
@@ -40,7 +40,8 @@ class Manager:
         Manager.__instance = self
 
     def generate_game_id(self):
-        random_id = "".join([choice("0123456789") for _ in range(3)])
+        # random_id = "".join([choice("0123456789") for _ in range(3)])
+        random_id = str(randint(1700, 2024))
         if random_id in self.games.keys():
             return self.generate_game_id()
 
