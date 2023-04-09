@@ -11,6 +11,7 @@ class Quiz(QuizBase):
 
 class ChoiceBase(BaseModel):
     choice: str
+    value: str
 
 
 class Choice(ChoiceBase):

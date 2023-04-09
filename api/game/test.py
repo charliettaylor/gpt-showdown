@@ -14,11 +14,15 @@ async def scenario1():
     await man.dispatch(create_event)
 
     gid = list(man.games.keys())[0]
-    join_event = Event(action="JOIN", nickname="Bob", game_id=gid)
-    await man.dispatch(join_event)
+    for _ in range(10):
+        join_event = Event(action="JOIN", nickname="Bob", game_id=gid)
+        await man.dispatch(join_event)
+
 
     other_action = Event(action="START", nickname="Alice", player_id=0, game_id=gid)
     await man.dispatch(other_action)
+
+    # print(man.games[gid].players)
 
 
 

@@ -5,7 +5,7 @@ con = sqlite3.connect("qc.db")
 
 QUIZZES = "CREATE TABLE IF NOT EXISTS quizzes (id INTEGER PRIMARY KEY, name TEXT)"
 QUESTIONS = "CREATE TABLE IF NOT EXISTS questions (id INTEGER PRIMARY KEY, quiz_id INTEGER, question TEXT, answer TEXT)"
-CHOICES = "CREATE TABLE IF NOT EXISTS choices (id INTEGER PRIMARY KEY, question_id INTEGER,choice TEXT)"
+CHOICES = "CREATE TABLE IF NOT EXISTS choices (id INTEGER PRIMARY KEY, question_id INTEGER,choice TEXT, value TEXT)"
 
 
 def create_schema():
@@ -37,9 +37,8 @@ def insert_question(quiz_id: int, q: CreateQuestion) -> bool:
 def insert_choice(question_id: int, c: CreateChoice) -> bool:
     cur = con.cursor()
     cur.execute(
-        "INSERT INTO choices (question_id, choice) VALUES (?, ?)", (question_id, c.choice)
+        "INSERT INTO choices (question_id, choice, value) VALUES (?, ?, ?)", (question_id, c.choice, c.value)
     )
     con.commit()
 
     return cur.lastrowid
-

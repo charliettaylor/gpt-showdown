@@ -1,6 +1,7 @@
 from .models import Player, Event, PlayerID
 from api.schema import Question
-from time import sleep
+from asyncio import sleep
+
 
 """
 Each game instance contains currently connected players.
@@ -26,7 +27,7 @@ class Game:
     async def game_loop(self):
         self.state = "PLAY"
         while self.state != "FINISHED":
-            sleep(1)
+            await sleep(1)
             self.time += 1
             if self.time == 30 or len(self.current_choices) == len(self.players):
                 await self.next_question()
