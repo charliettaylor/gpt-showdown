@@ -82,11 +82,11 @@ class Game:
         for player in self.players:
             try:
                 assert player.socket is not None, "Error: player socket is invalid"
+                copy.socket = None
                 copy = Event(**player.dict())
                 copy.state = state
                 copy.player_count = len(self.players)
                 copy.choice = None
-                copy.socket = None
 
                 if state == "COUNTDOWN":
                     for i in range(3, 0, -1):

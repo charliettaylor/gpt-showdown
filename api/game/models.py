@@ -28,9 +28,9 @@ class PlayerDTO(BaseModel):
 
 class Event(Player):
     # JOIN, LEAVE, SUBMIT
-    action: str
+    action: str | None
     # LOBBY, COUNTDOWN, QUESTION, ANSWER, GAMEOVER
-    state: str = "LOBBY"
+    state: str | None = "LOBBY"
     question: McQuestionDTO | None = None
     answer: str | None = None
     leaderboard: list[PlayerDTO] | None = None
