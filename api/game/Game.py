@@ -40,6 +40,7 @@ class Game:
         await self.broadcast("QUESTION")
         while self.state != "FINISHED":
             await sleep(1)
+            await self.broadcast("TIME", 30 - self.time)
             self.time += 1
 
             if self.time >= 30 or len(self.choices.keys()) == len(self.players) - 1:
@@ -116,12 +117,16 @@ class Game:
                     copy.leaderboard = list(
                         sorted(self.players, key=lambda x: x.score, reverse=True)
                     )[: min(3, len(self.players))]
+                elif state == "TIME":
+                    copy.countdown = countdown
+            
                 await player.socket.send_text(json.dumps(copy.dict()))
             except Exception as e:
                 print("Error: ", e)
                 print("Removing player: ", player)
                 self.players.remove(player)
-        if countdown is not None and countdown > 0:
+
+        if countdown is not None and countdown > 0 and state == "COUNTDOWN":
             await sleep(1)
             await self.broadcast(state, countdown - 1)
 
