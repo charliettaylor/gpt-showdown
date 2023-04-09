@@ -3,18 +3,21 @@ from ..schema import Question
 from asyncio import sleep
 from dataclasses import dataclass
 
-
 """
 Each game instance contains currently connected players.
 """
 
-GameID = str
+
+kPOINTS = 1_000
 
 
 @dataclass
 class PlayerInfo:
-    choice: str
+    choice: str = ""
     score: int = 0
+
+
+GameID = str
 
 
 class Game:
@@ -37,7 +40,16 @@ class Game:
         while self.state != "FINISHED":
             await sleep(1)
             self.time += 1
-            if self.time == 30 or len(self.current_choices) == len(self.players):
+            answered = [
+                sum(
+                    [
+                        1 if len(pinfo.choice) else 0
+                        for pid, pinfo in self.player_info.items()
+                    ]
+                )
+            ]
+
+            if self.time >= 30 or answered == len(self.players):
                 await self.next_question()
                 self.time = 0
 
@@ -68,19 +80,33 @@ class Game:
             self.players[self.host_id].socket.send_text(self.player_info)
             return
 
-        self.current_choices = dict()
+        for pid, _ in self.player_info.items():
+            self.player_info[pid].choice = ""
+
         await self.broadcast("NEXTQUESTION")
 
     async def broadcast(self, message: str):
         for player in self.players:
             if player.socket is None:
                 continue  # HACK: for dev
-            await player.socket.send_text(message)
+            try:
+                await player.socket.send_text(message)
+            except:
+                print("Removing player: ", player)
+                self.players.remove(player)
 
     def check_answer(self):
-        for player in self.player_info:
-            if player.choice == self.questions[self.current_question_id].correct:
-                self.player_info[player].score += 1000
+        for player_id in self.player_info.keys():
+            player_choice = self.player_info[player_id].choice
+            if player_choice == self.questions[self.current_question_id].answer:
+                self.player_info[player_id].score += kPOINTS
+
+        # for player_id in self.player_info.keys():
+        #     if (
+        #         self.player_info[player_id].choice
+        #         == self.questions[self.current_question_id].correct
+        #     ):
+        #         self.player_info[player].score += 1000
 
 
 """

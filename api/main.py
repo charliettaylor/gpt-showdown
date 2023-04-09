@@ -92,6 +92,8 @@ async def websocket_endpoint(websocket: WebSocket):
 
         await man.dispatch(event=event)
 
+    # handle leave
+
 
 # TODO: move this to different file
 async def get_gpt_response(game_id: GameID, question_id: str):
