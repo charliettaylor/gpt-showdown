@@ -84,9 +84,7 @@ async def websocket_endpoint(websocket: WebSocket):
             as_json["socket"] = websocket
             event = Event(**as_json)
         except:
-            await websocket.send_text(
-                "Invalid JSON in WebSocket body or Invalid Event model"
-            )
+            await websocket.send_text(Event(state="ERROR", error="Invalid JSON"))
             logging.info("Invalid JSON")
             return
 

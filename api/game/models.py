@@ -12,9 +12,9 @@ class Player(BaseModel):
     nickname: str
     player_id: PlayerID | None = None
     game_id: str | None = None
-    quiz_id: int
+    quiz_id: int | None = None
     choice: str | None = None
-    score: int = 0
+    score: int | None = 0
     socket: WebSocket | None = None
 
     class Config:
@@ -34,5 +34,5 @@ class Event(Player):
     question: McQuestionDTO | None = None
     answer: str | None = None
     leaderboard: list[PlayerDTO] | None = None
-    player_count: int = 0
+    player_count: int | None = 0
     error: str | None = None

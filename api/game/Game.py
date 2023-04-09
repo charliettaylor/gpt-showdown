@@ -113,10 +113,10 @@ class Game:
                 self.players.remove(player)
 
     def check_answer(self):
-        for player_id in self.player_info.keys():
-            player_choice = self.player_info[player_id].choice
+        for player_id in self.choices.keys():
+            player_choice = self.choices[player_id].choice
             if player_choice == self.questions[self.current_question_id].answer:
-                self.player_info[player_id].score += kPOINTS
+                self.players[player_id].score += kPOINTS
 
 
 """
