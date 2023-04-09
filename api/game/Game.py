@@ -70,7 +70,10 @@ class Game:
         self.players.append(player)
 
         if player.socket:
-            as_json = str(player.dict())
+            copy = Player(**player)
+            copy.socket = None
+            as_json = str(copy.dict())
+
             await player.socket.send_text(as_json)
 
     async def remove_player(self, player: Player):
