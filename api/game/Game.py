@@ -1,5 +1,5 @@
 from .models import Player, PlayerID
-from ..schema import Question, McQuestion
+from ..schema import McQuestionDTO, Question, McQuestion
 from asyncio import sleep
 from dataclasses import dataclass
 import json
@@ -105,8 +105,11 @@ class Game:
 
     async def broadcast_question(self):
         current_question = self.questions[self.current_question_id]
-        # TODO: send choices too
-        await self.broadcast(json.dumps(current_question.dict()))
+        dto = McQuestionDTO(
+            question=current_question.question, choices=current_question.choices
+        )
+        await self.broadcast(json.dumps(dto.dict()))
+        print("ANSWER: ", current_question.answer)
 
     async def broadcast(self, message: str):
         for player in self.players:

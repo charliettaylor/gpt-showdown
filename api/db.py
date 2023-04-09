@@ -80,7 +80,9 @@ def get_questions_by_quiz(quiz_id: int) -> list[McQuestion]:
         choices = get_choices_by_question(row["id"])
         things.append(
             McQuestion(
-                question=row["question"], choices=[ChoiceBase(**x) for x in choices]
+                question=row["question"],
+                choices=[ChoiceBase(**x) for x in choices],
+                answer=row["answer"],
             )
         )
 

@@ -42,6 +42,10 @@ class CreateQuiz(QuizBase):
     questions: list[CreateQuestion]
 
 
-class McQuestion(BaseModel):
+class McQuestion(QuestionBase):
+    choices: list[ChoiceBase]
+
+
+class McQuestionDTO(BaseModel):
     question: str
     choices: list[ChoiceBase]
