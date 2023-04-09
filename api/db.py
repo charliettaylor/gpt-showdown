@@ -63,7 +63,7 @@ def get_all_quizzes():
 
 def get_choices_by_question(question_id: int):
     cur = con.cursor()
-    cur.execute("SELECT * FROM choices WHERE question_id = ?", (str(question_id)))
+    cur.execute("SELECT * FROM choices WHERE question_id = ?", (str(question_id),))
     rows = cur.fetchall()
     return rows
 
