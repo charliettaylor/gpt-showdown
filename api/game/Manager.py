@@ -1,3 +1,8 @@
+from collections import defaultdict
+from Game import Game, GameID
+from random import choice
+from string import ascii_uppercase
+
 """
 Manager holds all activate game instances.
 
@@ -18,18 +23,22 @@ class Manager:
         else:
             Manager.__instance = self
 
-        self.games = [1, 2, 3]
+        self.games: dict[GameID, Game] = dict()
 
-    def get_games(self):
-        return self.games
+    def generate_game_id(self):
+        random_id = "".join([choice(ascii_uppercase) for _ in range(3)])
+        if random_id in self.games.keys():
+            return self.generate_game_id()
 
-    def add_game(self, to_add: int):
-        self.games.append(4)
+        return random_id  # [A-Z]{3}
+
+    def create_game(self):
+        game_id = self.generate_game_id()
+        game = Game()
+        self.games[game_id] = game
 
 
 if __name__ == "__main__":
     man = Manager()
-    man2 = Manager.get_instance() or man
-    man.add_game(4)
-    print(man.get_games())
-    print(man2.get_games())
+    man.create_game()
+    print(man.games)

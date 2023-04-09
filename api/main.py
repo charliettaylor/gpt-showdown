@@ -26,7 +26,6 @@ app.add_middleware(
 app = FastAPI()
 
 # Create a new gpt instance per game id
-GameID = str
 gpt_instances: defaultdict[GameID, Assistant] = defaultdict(lambda: Assistant())
 
 active_games = set(["AAA"])
