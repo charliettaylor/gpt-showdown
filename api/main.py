@@ -1,16 +1,16 @@
 from collections import defaultdict
 
-from fastapi import FastAPI, HTTPException
-from fastapi import FastAPI, WebSocket
+from fastapi import FastAPI, HTTPException, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
-from pydantic import BaseModel
 
 from assistant import Assistant
 from db import create_schema, insert_choice, insert_question, insert_quiz
 
 from parse_gpt import parse_gpt
-from schema import CreateChoice, CreateQuestion, CreateQuiz
+from schema import CreateQuiz
+from .game.Manager import Manager
+from .game.Event import Event
 
 app = FastAPI()
 
@@ -64,10 +64,12 @@ async def create_quiz(quiz: CreateQuiz):
 
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
+    man = Manager.get_instance()
     await websocket.accept()
     while True:
         data = await websocket.receive_text()
-        await websocket.send_text(f"Message text was: {data}")
+
+        man.dispatch(event=Event(socket=websocket, **data))
 
 
 # TODO: move this to different file

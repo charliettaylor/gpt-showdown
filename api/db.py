@@ -41,5 +41,5 @@ def insert_choice(question_id: int, c: CreateChoice) -> bool:
     )
     con.commit()
 
-    return cur.lastrowid
+    return cur.lastrowid∏
 
