@@ -92,9 +92,12 @@ class Manager:
         assert event.game_id is not None, "Error: game id is Invalid"
         game = self.games[event.game_id]
 
+        print("EVENT: ", event)
+
         if event.action == "JOIN":
             await game.add_player(event)
         elif event.action == "SUBMIT":
+            print("HERE IN SUBMIT")
             await game.add_player_choice(event.player_id, event.choice)
         elif event.action == "LEAVE":
             await game.remove_player(event)

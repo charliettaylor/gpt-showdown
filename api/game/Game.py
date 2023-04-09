@@ -83,6 +83,7 @@ class Game:
 
     async def add_player_choice(self, player_id, choice):
         self.choices[player_id] = choice
+        # print("\n\n\n\nAHHHH: ", self.choices, "\n\n\n")
 
     async def handle_end_game(self):
         self.state = "FINISHED"
@@ -136,7 +137,7 @@ class Game:
                         {"nickname": x.nickname, "score": x.score}
                         for x in list(
                             sorted(self.players, key=lambda x: x.score, reverse=True)
-                        )[: min(3, len(self.players))]
+                        )  # [: min(3, len(self.players))]
                     ]
                 elif state == "ANSWER":
                     copy.answer = self.questions[self.current_question_id].answer
@@ -144,7 +145,7 @@ class Game:
                         {"nickname": x.nickname, "score": x.score}
                         for x in list(
                             sorted(self.players, key=lambda x: x.score, reverse=True)
-                        )[: min(3, len(self.players))]
+                        )  # [: min(3, len(self.players))]
                     ]
 
                 await player.socket.send_text(json.dumps(copy.dict()))
@@ -159,7 +160,7 @@ class Game:
 
     def check_answer(self):
         for i, player in enumerate(self.players):
-            if player.player_id not in self.choices:
+            if player.player_id not in self.choices.keys():
                 continue
             player_choice = self.choices[player.player_id]
             if player_choice == self.questions[self.current_question_id].answer:
