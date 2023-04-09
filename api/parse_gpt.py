@@ -22,21 +22,33 @@ def parse_gpt(gpt_response: str):
 
 
 def test():
-    responses = {
+    known_responses = {
         "My chosen answer is [A].": "A",
         "Some stuff, some more stuff 123 [5] my answer is [c]": "C",
     }
 
-    total = len(responses.keys())
     correct = 0
 
-    for pre, actual in responses.items():
+    for pre, actual in known_responses.items():
         parsed = parse_gpt(pre)
         if parsed != actual:
             print(f"Failed test: {pre}. Got {parsed} should be {actual}")
             continue
         correct += 1
 
+    random_responses = [
+        "This is an example of a GPT response with no regex-able match.",
+        "Same with this [1] haha",
+    ]
+
+    for response in random_responses:
+        parsed = parse_gpt(response)
+        if parsed not in kCHOICES:
+            print(f"Failed test: {response}. Got {parsed} should be one of {kCHOICES}")
+            continue
+        correct += 1
+
+    total = len(known_responses.keys()) + len(random_responses)
     print(f"Passed {correct}/{total}")
 
 
