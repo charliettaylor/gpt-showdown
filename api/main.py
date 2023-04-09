@@ -7,7 +7,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 
 from .assistant import Assistant
-from .db import create_schema, insert_choice, insert_question, insert_quiz
+from .db import (
+    create_schema,
+    insert_choice,
+    insert_question,
+    insert_quiz,
+    get_all_quizzes,
+)
 from .parse_gpt import parse_gpt
 from .schema import CreateQuiz
 from .game.Manager import Manager
@@ -53,6 +59,11 @@ async def create_quiz(quiz: CreateQuiz):
             insert_choice(id, choice)
 
     return {"message": "Quiz created"}
+
+
+@app.get("/api/get_quizzes")
+async def get_quizzes():
+    return get_all_quizzes()
 
 
 @app.websocket("/ws")

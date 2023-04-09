@@ -43,3 +43,10 @@ def insert_choice(question_id: int, c: CreateChoice) -> int | None:
     con.commit()
 
     return cur.lastrowid
+
+
+def get_all_quizzes():
+    cur = con.cursor()
+    cur.execute("SELECT * FROM QUIZZES")
+    rows = cur.fetchall()
+    return rows
