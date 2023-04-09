@@ -6,11 +6,12 @@ Each player instance contains information about currently connected users over T
 """
 PlayerID = int
 
+
 class Player(BaseModel):
     nickname: str = ""
-    player_id: PlayerID = 0
-    game_id: str = "000"
-    choice: str = ""
+    player_id: PlayerID | None = None
+    game_id: str | None = None
+    choice: str | None = None
     _socket: WebSocket | None = None
 
 

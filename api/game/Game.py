@@ -19,6 +19,7 @@ class Game:
         self.current_choices = dict()  # TODO: What is this?
         self.time = 0
         self.p_count = 0
+        self.host_id = host_id
 
     def __repr__(self):
         out = f"Game[{self.state=}, {self.players=}]"

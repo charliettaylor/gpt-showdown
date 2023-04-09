@@ -1,5 +1,6 @@
 from collections import defaultdict
 import json
+import logging
 
 from fastapi import FastAPI, HTTPException, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
@@ -61,8 +62,15 @@ async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     while True:
         data = await websocket.receive_text()
-        as_json = json.loads(data)  # TODO: verify that this works
-        event = Event(**as_json, _socket=websocket)
+        try:
+            as_json = json.loads(data)  # TODO: verify that this works
+            event = Event(**as_json, _socket=websocket)
+        except:
+            await websocket.send_text(
+                "Invalid JSON in WebSocket body or Invalid Event model"
+            )
+            logging.info("Invalid JSON")
+            return
 
         await man.dispatch(event=event)
 
