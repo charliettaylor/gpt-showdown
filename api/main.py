@@ -1,32 +1,16 @@
 from collections import defaultdict
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-from assistant import Assistant
-from fastapi.middleware.cors import CORSMiddleware
-
-from collections import defaultdict
-
-
-from db import (
-    create_schema,
-    insert_quiz,
-    insert_question,
-    insert_choice,
-)
-
-from schema import CreateQuiz, CreateQuestion, CreateChoice
 
 from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 
 from assistant import Assistant
-from db import (
-    create_schema,
-    insert_choice,
-    insert_question,
-)
+from db import create_schema, insert_choice, insert_question, insert_quiz
+
 from parse_gpt import parse_gpt
+from schema import CreateChoice, CreateQuestion, CreateQuiz
 
 app = FastAPI()
 
@@ -75,10 +59,19 @@ async def create_quiz(quiz: CreateQuiz):
         id = insert_question(quiz_id, question)
         for choice in question.choices:
             insert_choice(id, choice)
-    
+
     return {"message": "Quiz created"}
 
 
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()
+    while True:
+        data = await websocket.receive_text()
+        await websocket.send_text(f"Message text was: {data}")
+
+
+# TODO: move this to different file
 async def get_gpt_response(game_id: GameID, question_id: str):
     """
     Query database and ask GPT what it thinks the answer is.
