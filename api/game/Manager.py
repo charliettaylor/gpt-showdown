@@ -65,6 +65,7 @@ class Manager:
             # make host have id of game
             event.game_id = self.hosts[event.player_id]
             game = self.games[event.game_id]
+            await game.add_player(event)
             await game.start_lobby()
             print(event)
             return

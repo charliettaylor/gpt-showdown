@@ -86,6 +86,7 @@ class Game:
                 copy.state = state
                 copy.player_count = len(self.players)
                 copy.choice = None
+                copy.socket = None
 
                 if state == "COUNTDOWN":
                     for i in range(3, 0, -1):
@@ -105,8 +106,9 @@ class Game:
                         sorted(player, lambda x: x.score, reverse=True)
                     )[:3]
 
-                await player.socket.send_text(copy)
-            except:
+                await player.socket.send_text(json.dumps(copy.dict()))
+            except Exception as e:
+                print("Error: ", e)
                 print("Removing player: ", player)
                 self.players.remove(player)
 
