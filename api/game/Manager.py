@@ -26,7 +26,7 @@ class Manager:
         self.games: dict[GameID, Game] = dict()
 
     def generate_game_id(self):
-        random_id = "".join([choice(ascii_uppercase) for _ in range(3)])
+        random_id = "".join([choice("0123456789") for _ in range(3)])
         if random_id in self.games.keys():
             return self.generate_game_id()
 
