@@ -1,5 +1,12 @@
 import sqlite3
-from .schema import CreateQuestion, CreateChoice, CreateQuiz, Question
+from .schema import (
+    CreateQuestion,
+    CreateChoice,
+    CreateQuiz,
+    McQuestion,
+    Question,
+    ChoiceBase,
+)
 
 con = sqlite3.connect("qc.db")
 con.row_factory = sqlite3.Row
@@ -54,12 +61,30 @@ def get_all_quizzes():
     return rows
 
 
-def get_questions_by_quiz(quiz_id: int) -> list[Question]:
+def get_choices_by_question(question_id: int):
+    cur = con.cursor()
+    cur.execute("SELECT * FROM choices WHERE question_id = ?", (str(question_id)))
+    rows = cur.fetchall()
+    return rows
+
+
+def get_questions_by_quiz(quiz_id: int) -> list[McQuestion]:
+    things = []
+
     cur = con.cursor()
 
     cur.execute("SELECT * FROM questions WHERE quiz_id = ?", (str(quiz_id)))
     rows = cur.fetchall()
-    return [Question(**x) for x in rows]
+
+    for row in rows:
+        choices = get_choices_by_question(row["id"])
+        things.append(
+            McQuestion(
+                question=row["question"], choices=[ChoiceBase(**x) for x in choices]
+            )
+        )
+
+    return things
 
 
 def get_all_quiz_categories():

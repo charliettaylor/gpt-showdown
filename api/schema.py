@@ -40,3 +40,8 @@ class CreateQuestion(QuestionBase):
 
 class CreateQuiz(QuizBase):
     questions: list[CreateQuestion]
+
+
+class McQuestion(BaseModel):
+    question: str
+    choices: list[ChoiceBase]

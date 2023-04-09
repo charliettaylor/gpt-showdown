@@ -1,7 +1,8 @@
 from .models import Player, PlayerID
-from ..schema import Question
+from ..schema import Question, McQuestion
 from asyncio import sleep
 from dataclasses import dataclass
+import json
 
 """
 Each game instance contains currently connected players.
@@ -25,7 +26,7 @@ class Game:
         self.current_question_id = 0
         self.state: str | None = "LOBBY"
         self.players: list[Player] = []
-        self.questions: list[Question] = []
+        self.questions: list[McQuestion] = []
         self.player_info: dict[PlayerID, PlayerInfo] = dict()
         self.time = 0
         self.p_count = 0
@@ -45,8 +46,7 @@ class Game:
         await self.broadcast("GAMESTART")
         await self.countdown(3)  # how long to wait before game start
         # send first question
-        current_question = self.questions[self.current_question_id].question
-        await self.broadcast(current_question)
+        await self.broadcast_question()
         while self.state != "FINISHED":
             await sleep(1)
             self.time += 1
@@ -104,9 +104,9 @@ class Game:
         await self.broadcast_question()
 
     async def broadcast_question(self):
-        current_question = self.questions[self.current_question_id].question
+        current_question = self.questions[self.current_question_id]
         # TODO: send choices too
-        await self.broadcast(current_question)
+        await self.broadcast(json.dumps(current_question.dict()))
 
     async def broadcast(self, message: str):
         for player in self.players:
