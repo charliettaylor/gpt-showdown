@@ -7,6 +7,8 @@
 
   let ws;
 
+  let colors = ["red", "blue", "yellow", "green"];
+
   let game = {
     state: "NOT_CREATED",
     nickname: null,
@@ -143,9 +145,11 @@
 
   {#if game.question && !game.choice}
     <div id="answer_choices">
-      {#each game.question.choices as choice}
+      {#each game.question.choices as choice, i}
         <div class="choice">
-          <button on:click={() => answer(choice.choice)}>{choice.value}</button>
+          <button class={colors[i]} on:click={() => answer(choice.choice)}
+            >{choice.value}</button
+          >
         </div>
       {/each}
     </div>
@@ -156,26 +160,60 @@
       {game.answer}
     </h1>
   {/if}
+
+  <!-- <div id="answer_choices"> -->
+  <!--   <div class="choice"> -->
+  <!--     <button>A</button> -->
+  <!--   </div> -->
+  <!--   <div class="choice"> -->
+  <!--     <button>A</button> -->
+  <!--   </div> -->
+
+  <!--   <div class="choice"> -->
+  <!--     <button>A</button> -->
+  <!--   </div> -->
+
+  <!--   <div class="choice"> -->
+  <!--     <button>A</button> -->
+  <!--   </div> -->
+  <!-- </div> -->
 </div>
 
 <style>
   #answer_choices {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    place-items: center;
+    padding: 0;
+    background-color: red;
+    width: 75vw;
   }
 
-  #answer_choices > div {
-    flex: 50%;
-    margin-bottom: 10px;
+  @media (min-width: 851px) {
+    .choice {
+      min-width: 30vw;
+      max-width: 40vw;
+      aspect-ratio: 1;
+      margin: 2px;
+    }
   }
 
-  .choice {
-    width: 100%;
+  @media (max-width: 850px) {
+    #answer_choices {
+      background-color: yellow;
+      display: flex;
+      flex-direction: column;
+    }
+    /* … */
+    .choice {
+      min-width: 100vw;
+      min-height: 20vh;
+      margin: 2px;
+    }
   }
 
   .choice > button {
-    width: 20vw;
-    padding: 50px;
+    width: 100%;
     height: 100%;
   }
 
@@ -184,13 +222,13 @@
     left: 0;
     bottom: 0;
     width: 100%;
-    padding: 10px;
+    padding: 0.01rem;
   }
 
   button {
     border: 4px solid black;
     background-color: white;
-    margin: auto 2rem;
+    /* margin: auto 2rem; */
   }
 
   .connection {
