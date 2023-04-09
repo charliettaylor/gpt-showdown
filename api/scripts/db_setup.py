@@ -1,7 +1,7 @@
 import re
 from collections import defaultdict
 from ..schema import CreateQuiz, CreateQuestion, CreateChoice
-from ..db import insert_quiz, insert_choice, insert_question
+from ..db import create_schema, insert_quiz, insert_choice, insert_question
 
 
 def insert_quizzes():
@@ -52,6 +52,7 @@ def insert_quizzes():
 
 
 if __name__ == "__main__":
+    create_schema()
     quizzes = insert_quizzes()
     # print(quizzes)
     for quiz in quizzes:

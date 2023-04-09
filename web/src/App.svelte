@@ -1,19 +1,18 @@
 <script lang="ts">
-  import Home from "./components/Home.svelte";
+  import Play from "./components/Play.svelte";
   import Host from "./components/Host.svelte";
 
   const path = location.pathname;
-
 </script>
 
 <main>
-  {#if (path == "/")}
-    <Home />
+  {#if path == "/"}
+    <Play />
     <footer>
       <small>Create a quiz <a href="/host">here!</a></small>
     </footer>
   {/if}
-  {#if (path == "/host")}
+  {#if path == "/host"}
     <Host />
   {/if}
 </main>

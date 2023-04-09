@@ -1,9 +1,18 @@
 <script>
-  export let name;
-  export let category;
+  export let quiz;
+
+  import { createEventDispatcher } from "svelte";
+
+  const dispatch = createEventDispatcher();
+
+  function select_quiz() {
+    dispatch("select_quiz", {
+      quiz: quiz,
+    });
+  }
 </script>
 
-<div class="box">
-  <h3>{name}</h3>
-  <p>{category}</p>
-</div>
+<button on:click={select_quiz} class="box">
+  <h3>{quiz.name}</h3>
+  <p>{quiz.category}</p>
+</button>
