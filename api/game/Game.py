@@ -72,7 +72,7 @@ class Game:
         if player.socket:
             copy = Player(**player.dict())
             copy.socket = None
-            as_json = str(copy.dict())
+            as_json = json.dumps(copy.dict())
 
             await player.socket.send_text(as_json)
 
