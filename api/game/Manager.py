@@ -3,7 +3,6 @@ from .Game import Game, GameID
 from .models import Event, PlayerID
 from ..db import get_questions_by_quiz
 from random import choice
-from string import ascii_uppercase
 from threading import Thread
 import logging
 import sys

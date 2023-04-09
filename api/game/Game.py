@@ -1,4 +1,4 @@
-from .models import Player, Event, PlayerID
+from .models import Player, PlayerID
 from ..schema import Question
 from asyncio import sleep
 from dataclasses import dataclass
@@ -46,6 +46,7 @@ class Game:
         self.p_count += 1
 
         self.players.append(player)
+
         if player.socket:
             as_json = str(player.dict())
             await player.socket.send_text(as_json)
@@ -64,6 +65,7 @@ class Game:
         if self.current_question_id >= len(self.questions):
             self.state = "FINISHED"
             await self.broadcast("GAMEOVER")
+            self.players[self.host_id].socket.send_text(self.player_info)
             return
 
         self.current_choices = dict()
