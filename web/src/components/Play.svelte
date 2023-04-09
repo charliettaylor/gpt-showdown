@@ -156,13 +156,6 @@
       {game.answer}
     </h1>
   {/if}
-
-  {#if game.leaderboard}
-    <h1>Leaderboard</h1>
-    {#each game.leaderboard as player}
-      <h3>{player.nickname}: {player.score}</h3>
-    {/each}
-  {/if}
 </div>
 
 <style>

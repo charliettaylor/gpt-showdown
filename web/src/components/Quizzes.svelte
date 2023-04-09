@@ -24,7 +24,13 @@
 <div class="block">
   <div class="field search block">
     <label for="search">Search</label>
-    <input bind:value={search} class="input" name="search" type="text" />
+    <input
+      bind:value={search}
+      class="input"
+      name="search"
+      type="text"
+      autocomplete="off"
+    />
   </div>
   <div id="quizzes" class="section">
     {#each quizzes as quiz}

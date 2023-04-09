@@ -18,19 +18,17 @@
   };
 
   onMount(() => {
+    setInterval(() => {
+      if (time && time > 0) {
+        time -= 1;
+      }
+    }, 1000);
     ws = new WebSocket("ws://localhost:8000/ws");
 
     ws.addEventListener("message", (e) => {
       const msg = JSON.parse(e.data);
       if (msg.state == "QUESTION") {
         time = 30;
-        setInterval(() => {
-          if (time > 0) {
-            time -= 1;
-          } else {
-            clearInterval(this);
-          }
-        }, 1000);
       }
       game = msg;
     });
@@ -63,19 +61,32 @@
     <h1>{game.question.text}</h1>
     <div id="answer_choices">
       {#each game.question.choices as choice}
-        <div class="choice">{choice.value}</div>
+        <div class="choice"><div>{choice.value}</div></div>
       {/each}
     </div>
   {/if}
 
   {#if game.state == "ANSWER"}
-    <h2>Answer</h2>
-    <h3>{game.answer}</h3>
-    <h3>Answer</h3>
-    <h1>Leaderboard</h1>
-    {#each game.leaderboard as player}
-      <h3>{player.nickname}: {player.score}</h3>
-    {/each}
+    <div class="leader">
+      <div class="block">
+        <h2>Answer: {game.answer}</h2>
+      </div>
+      <div class="block">
+        <h2>Leaderboard</h2>
+      </div>
+      <table class="table">
+        <tbody class="tbody">
+          {#each game.leaderboard as player}
+            {#if player.nickname != "host"}
+              <tr>
+                <td>{player.nickname}</td>
+                <td>{player.score}</td>
+              </tr>
+            {/if}
+          {/each}
+        </tbody>
+      </table>
+    </div>
   {/if}
 
   {#if game.state == "GAMEOVER"}
@@ -84,19 +95,9 @@
 </div>
 
 <style>
-  #time {
-    position: absolute;
-    top: 3em;
-    right: 3em;
-    font-size: 2em;
-  }
-
-  button {
-    background-color: red;
-  }
-
   #answer_choices {
     display: flex;
+    justify-content: space-between;
     flex-wrap: wrap;
   }
 
@@ -107,7 +108,49 @@
 
   .choice {
     width: 100%;
-    background-color: orange;
+  }
+
+  .choice > div {
+    border: 4px solid black;
+    border-radius: 10px;
+    background-color: white;
+    padding: 10px;
+    width: 20vw;
+    padding: 50px;
+    height: 100%;
+  }
+
+  .leader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  table,
+  tbody {
+    background: none;
+    border: 4px solid black;
+    border-radius: 10px;
+  }
+
+  h2 {
+    font-size: 2em;
+  }
+
+  td {
+    font-size: 3em;
+  }
+
+  #time {
+    position: absolute;
+    top: 3em;
+    right: 3em;
+    font-size: 2em;
+  }
+
+  button {
+    background-color: red;
   }
 
   #players {
