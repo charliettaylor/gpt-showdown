@@ -1,0 +1,10 @@
+{
+  "name": "GPT Showdown",
+  "short_name": "GPT Showdown",
+  "icons": [],
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background-color": "#fff",
+  "theme-color": "#fff",
+  "description": "Can you beat GPT?"
+}
