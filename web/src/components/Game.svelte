@@ -49,7 +49,9 @@
       </h1>
     </div>
     <div class="block" id="players">{game.player_count} Players</div>
-    <div class="block"><button on:click={start_game}>Start Game</button></div>
+    <div class="block">
+      <button class="green" on:click={start_game}>Start Game</button>
+    </div>
   {/if}
 
   {#if game.countdown}
@@ -147,10 +149,6 @@
     top: 3em;
     right: 3em;
     font-size: 2em;
-  }
-
-  button {
-    background-color: red;
   }
 
   #players {

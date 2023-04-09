@@ -98,7 +98,7 @@
               />
             </div>
           </div>
-          <button on:click|preventDefault={join_game}>Play</button>
+          <button class="blue" on:click|preventDefault={join_game}>Play</button>
         </form>
       {/if}
       {#if !entered_code}

@@ -1,3 +1,33 @@
+Computer_Science:
+1. What is the most modern version of CSS?
+    A) CSS4
+    B) CSS5
+    C) CSS3
+    D) CSS2
+Answer: C) CSS3
+
+2. What is the most popular version control?
+    A) geet
+    B) glit
+    C) git
+    D) got
+Answer: C) git
+
+3. What is Karni's last name?
+    A) Vocational
+    B) Vermen
+    C) Vicious
+    D) Velumani
+Answer: D) Velumani
+
+4. What does GNU stand for?
+    A) Gigantic Naked Unicorn 
+    B) Gnome Networking Utility
+    C) GNU's Not Unix
+    D) Generic Network Utility
+
+5. What is 18 % 4?
+
 Art:
 1. Pablo Picasso painted the "The Starry Night".
     A) True
