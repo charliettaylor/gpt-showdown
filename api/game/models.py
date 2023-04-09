@@ -36,3 +36,4 @@ class Event(Player):
     leaderboard: list[PlayerDTO] | None = None
     player_count: int | None = 0
     error: str | None = None
+    countdown: int | None = 0
