@@ -35,8 +35,18 @@ class Game:
         out = f"Game[{self.state=}, {self.players=}]"
         return out
 
+    async def countdown(self, amount: int) -> None:
+        for i in range(amount, -1, -1):
+            await self.broadcast(f"COUNTDOWN[{i}]")
+            await sleep(1)
+
     async def game_loop(self):
         self.state = "PLAY"
+        await self.broadcast("GAMESTART")
+        await self.countdown(3)  # how long to wait before game start
+        # send first question
+        current_question = self.questions[self.current_question_id].question
+        await self.broadcast(current_question)
         while self.state != "FINISHED":
             await sleep(1)
             self.time += 1
@@ -71,25 +81,33 @@ class Game:
     async def add_player_choice(self, player_id, choice):
         self.player_info[player_id].choice = choice
 
+    async def handle_end_game(self):
+        self.state = "FINISHED"
+        await self.broadcast("GAMEOVER")
+        host_socket = self.players[self.host_id].socket
+        assert host_socket is not None, "Error: lost player socket"
+        # self.players[self.host_id].socket.send_text(self.player_info)
+        await host_socket.send_text(str(self.player_info))
+
     async def next_question(self):
         self.check_answer()
         self.current_question_id += 1
         if self.current_question_id >= len(self.questions):
-            self.state = "FINISHED"
-            await self.broadcast("GAMEOVER")
-            self.players[self.host_id].socket.send_text(self.player_info)
+            await self.handle_end_game()
             return
 
         for pid, _ in self.player_info.items():
             self.player_info[pid].choice = ""
 
         await self.broadcast("NEXTQUESTION")
+        await self.countdown(2)
+        current_question = self.questions[self.current_question_id].question
+        await self.broadcast(current_question)
 
     async def broadcast(self, message: str):
         for player in self.players:
-            if player.socket is None:
-                continue  # HACK: for dev
             try:
+                assert player.socket is not None, "Error: player socket is invalid"
                 await player.socket.send_text(message)
             except:
                 print("Removing player: ", player)
