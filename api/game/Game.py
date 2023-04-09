@@ -1,5 +1,5 @@
 from .models import Player, Event, PlayerID
-from api.schema import Question  # type: ignore
+from ..schema import Question
 from asyncio import sleep
 
 
