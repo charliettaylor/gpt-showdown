@@ -110,7 +110,7 @@ class Game:
                 print("Error: ", e)
                 print("Removing player: ", player)
                 self.players.remove(player)
-        if countdown >= 0:
+        if countdown is not None and countdown > 0:
             await sleep(1)
             await self.broadcast(state, countdown - 1)
 
