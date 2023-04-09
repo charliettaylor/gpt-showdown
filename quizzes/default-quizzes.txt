@@ -27,6 +27,11 @@ Answer: D) Velumani
     D) Generic Network Utility
 
 5. What is 18 % 4?
+    A) 14
+    B) 1
+    C) 0
+    D) 2
+Answer: D) 2
 
 Art:
 1. Pablo Picasso painted the "The Starry Night".
