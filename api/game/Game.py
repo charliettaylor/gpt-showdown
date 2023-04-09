@@ -115,9 +115,8 @@ class Game:
             await self.broadcast(state, countdown - 1)
 
     def check_answer(self):
-        for player_id in self.choices.keys():
-            player_choice = self.choices[player_id].choice
-            if player_choice == self.questions[self.current_question_id].answer:
+        for player_id, choice in self.choices.items():
+            if choice == self.questions[self.current_question_id].answer:
                 self.players[player_id].score += kPOINTS
 
 
