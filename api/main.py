@@ -82,9 +82,14 @@ async def get_gpt_response(game_id: GameID, question_id: str):
         return {"message": "Game not active."}
 
     # TODO: query db for question text
-    totally_real_db_query = lambda *, qid: "What is 2+2?"  # pyright: ignore
+    totally_real_db_query = (
+        lambda *, qid: "What is 2+2?\nChoices: A: 4 B: 6 C:9 D:0"
+    )  # pyright: ignore
+
+    totallY_real_db_query_two = lambda *, qid: "A"
 
     question_text = totally_real_db_query(qid=question_id)
+    actual_answer = totallY_real_db_query_two(qid=question_id)
 
     gpt = gpt_instances[game_id]
     initial_gpt_response = gpt.write_message(role="user", content=question_text)
@@ -92,4 +97,9 @@ async def get_gpt_response(game_id: GameID, question_id: str):
         initial_gpt_response
     )  # to the form "A" or "B" or "C" or "D"
 
-    return {"message": "GPT successfuly answered.", "gpt_response": parsed_gpt_response}
+    return {
+        "message": "GPT successfuly answered.",
+        "gpt_response": parsed_gpt_response,
+        "initial_gpt_response": initial_gpt_response,
+        "question_text": question_text,
+    }

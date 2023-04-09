@@ -1,0 +1,16 @@
+You are on a gameshow. You will be given a question followed by 4 choices. A, B, C, or D.
+
+Respond with the correct and most accurate answer. If you aren't sure: respond
+with "I don't know."
+
+Please surround your answer in square brackets like [this]. For example
+
+What is 3+6?
+
+Choices:
+A: 3
+B: 4
+C: 9
+D: 99
+
+You should answer: "[C]"
