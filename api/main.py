@@ -78,7 +78,11 @@ async def websocket_endpoint(websocket: WebSocket):
     assert man is not None, "Error: Manager is none in WebSocket endpoint!"
     await websocket.accept()
     while True:
-        data = await websocket.receive_text()
+        try:
+            data = await websocket.receive_text()
+        except:
+            break
+
         try:
             as_json = json.loads(data)
             as_json["socket"] = websocket
@@ -86,7 +90,7 @@ async def websocket_endpoint(websocket: WebSocket):
         except:
             await websocket.send_text(Event(state="ERROR", error="Invalid JSON"))
             logging.info("Invalid JSON")
-            return
+            break
 
         await man.dispatch(event=event)
 

@@ -3,6 +3,7 @@
   import Shape from "./Shape.svelte";
 
   let entered_name = false;
+  let entered_code = false;
 
   let ws;
 
@@ -19,23 +20,58 @@
   };
 
   const join_game = () => {
+    console.log("joining game");
     game.action = "JOIN";
     game.game_id = "" + game.game_id;
     ws.send(JSON.stringify(game));
   };
 
+  const handleCodeInput = () => {
+    console.log("handling code input");
+    entered_code = true;
+    game.action = "PING";
+    game.nickname = "";
+    ws.send(JSON.stringify(game));
+  };
+
+  const tryAgain = () => {
+    entered_code = false;
+    game.state = "NOT_CREATED";
+    error = "";
+  };
+
+  let ws_open = false;
+  let error = "";
+
   onMount(() => {
     ws = new WebSocket("ws://localhost:8000/ws");
 
+    ws.addEventListener("open", (event) => {
+      ws_open = true;
+      console.log(ws_open);
+    });
+    ws.addEventListener("close", (event) => {
+      ws_open = false;
+    });
+
     ws.addEventListener("message", (e) => {
+      if (e.data == "pong") {
+        ws_open = true;
+        return;
+      }
       const msg = JSON.parse(e.data);
-      console.log(msg);
+      if (msg.error) {
+        error = msg.error;
+        entered_code = false;
+      }
+
       game = msg;
     });
   });
 </script>
 
 <div>
+  {#if ws_open}<h3 class="connection">🔌</h3>{/if}
   {#if game.state == "NOT_CREATED"}
     <div id="main">
       <Shape shape="circle" />
@@ -45,7 +81,7 @@
       <div class="block">
         <h1>GPT Showdown</h1>
       </div>
-      {#if !entered_name}
+      {#if entered_code && ws_open}
         <form class="block">
           <div class="field">
             <label for="name" class="label">Enter Name</label>
@@ -60,12 +96,10 @@
               />
             </div>
           </div>
-          <button on:click|preventDefault={() => (entered_name = true)}
-            >Submit</button
-          >
+          <button on:click|preventDefault={join_game}>Play</button>
         </form>
       {/if}
-      {#if entered_name}
+      {#if !entered_code}
         <form class="block">
           <div class="field">
             <label for="code" class="label">Enter Game Code</label>
@@ -80,10 +114,14 @@
               />
             </div>
           </div>
-          <button on:click|preventDefault={join_game}>Join</button>
+          <button on:click|preventDefault={handleCodeInput}>Join</button>
         </form>
       {/if}
     </div>
+  {/if}
+  {#if error.length > 0}
+    <h1>{error}</h1>
+    <button on:click={tryAgain}>Try Again</button>
   {/if}
 
   {#if game.state == "LOBBY"}
@@ -124,6 +162,13 @@
 <style>
   button {
     background-color: #333;
+  }
+
+  .connection {
+    font-size: 1em;
+    position: absolute;
+    top: 0%;
+    left: 0%;
   }
 
   #main {

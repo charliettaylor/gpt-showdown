@@ -57,6 +57,14 @@ class Manager:
         self.hosts[event.player_id] = game_id
 
     async def dispatch(self, event: Event):
+        if event.action == "PING":
+            assert event.socket is not None, "Error: socket broken"
+            if event.game_id in self.games.keys():
+                await event.socket.send_text("pong")
+                return
+            await event.socket.send_text('{"error": "Bad Game ID"}')
+            return
+
         if event.action == "CREATE":
             # player needs id
             event.player_id = 0
