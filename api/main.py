@@ -46,7 +46,7 @@ async def root():
     return {"message": "gpt showdown :)"}
 
 
-@app.post("/api/quiz")
+@app.post("/quiz")
 async def create_quiz(quiz: CreateQuiz):
     quiz_id = insert_quiz(quiz)
 
@@ -62,12 +62,12 @@ async def create_quiz(quiz: CreateQuiz):
     return {"message": "Quiz created"}
 
 
-@app.get("/api/get_quizzes")
+@app.get("/get_quizzes")
 async def get_quizzes():
     return get_all_quizzes()
 
 
-@app.get("/api/get_quiz_categories")
+@app.get("/get_quiz_categories")
 async def get_quiz_categories():
     return get_all_quiz_categories()
 
