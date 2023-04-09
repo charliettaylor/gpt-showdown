@@ -1,0 +1,208 @@
+Art:
+1. Pablo Picasso painted the "The Starry Night".
+    A) True
+    B) False
+    C) None
+    D) None
+Answer: B) False
+
+2. Which Renaissance artist painted the ceiling of the Sistine Chapel?
+    A) Leonardo da Vinci
+    B) Michelangelo
+    C) Donatello
+    D) Raphael
+Answer: B) Michelangelo
+
+3. What type of art is created by arranging objects or materials into a three-dimensional composition?
+    A) Sculpture
+    B) Painting
+    C) Drawing
+    D) Printmaking
+Answer: A) Sculpture
+
+
+
+Science:
+1. What is the smallest unit of life?
+A) Atom
+B) Cell
+C) Molecule
+D) Virus
+Answer: B) Cell
+
+2. What is the name of the process by which a solid changes directly into a gas?
+    A) Melting
+    B) Boiling
+    C) Evaporation
+    D) Sublimation
+Answer: D) Sublimation
+
+3. What is the most abundant gas in Earth's atmosphere?
+    A) Oxygen
+    B) Nitrogen
+    C) Carbon dioxide
+    D) Argon
+Answer: B) Nitrogen
+
+
+
+Entertainment:
+1, Who played the character of Katniss Everdeen in the movie "The Hunger Games"?
+    A) Emma Watson
+    B) Jennifer Lawrence
+    C) Kristen Stewart
+    D) Dakota Fanning
+Answer: B) Jennifer Lawrence
+
+
+2. Which Jenner has the highest net worth?
+    A) Caitlynn Jenner
+    B) Kendall Jenner
+    C) Khris Jenner
+    D) Kylie Jenner
+Answer: Kylie Jenner - $15 million
+
+3. Who wrote the Twilight book series?
+    A) Stephanie Meyer
+    B) Stephen King
+    C) George R.R. Martin
+    D) Suzanne Collins
+Answer: A) Stephanie Meyer
+
+4. What is the name of the character played by Sylvester Stallone in the "Rocky" movie series?
+    A) Rocky Balboa
+    B) Apollo Creed
+    C) Ivan Drago
+    D) Clubber Lang
+Answer: A) Rocky Balboa
+
+
+
+Geography:
+1. Which country has the largest population in the world?
+    A) India
+    B) Indonesia
+    C) China
+    D) Russia
+Answer: C) China
+
+2. What U.S. state is home to no documented poisonous snakes?
+    A) Ohio
+    B) Deleware
+    C) North Dakota
+    D) Alaska
+Answer: D) Alaska
+
+3. True or False: The Pacific Ocean is the largest ocean in the world.
+    A) True
+    B) False
+    C) None
+    D) None
+Answer: A) True
+
+4. What is the smallest country in the world?
+    A) Tuvalu
+    B) The Vatican City
+    C) Monaco
+    D) None of the above
+Answer: B) The Vatican City
+
+
+
+Fermi Reasoning:
+1. How many pizzas are sold in the United States each year?
+    A) 10^7
+    B) 10^8
+    C) 10^9
+    D) 10^10
+Answer: D) 10^10
+
+2. How many blades of grass are there in Central Park?
+    A) 10^6
+    B) 10^9
+    C) 10^10
+    D) None of the above
+Answer: C) 10^10
+
+3. How many times does a person blink in a year?
+    A) 10^4
+    B) 10^5
+    C) 10^6
+    D) 10^7
+Answer: C) 10^6
+
+4. How many gallons of water does the average American household use each day?
+    A) 10^1
+    B) 10^2
+    C) 10^3
+    D) 10^4
+Answer: D) 10^4
+
+5. How many golf balls can fit inside a school bus?
+    A) 10^3
+    B) 10^4
+    C) 10^5
+    D) 10^7
+Answer: C) 10^5
+
+
+
+Math:
+1. What is 9(1)/36 + 32 - 20?
+    A) 12.25
+    B) 12.00
+    C) 12.75
+    D) 12.50
+Answer: A) 12.25
+
+2. What is the derivative of 22.5x^4?
+    A) 82x^4
+    B) 90x^3
+    C) 88x^3
+    D) 85x^3
+Answer: B) 90x^3
+
+3. Audrey has 112 blueberries. Joe eats a fourth of Audrey's blueberries. How many blueberries does Audrey have left?
+    A) 96
+    B) 28
+    C) 69
+    D) 84
+Answer: D) 84
+
+
+
+Trick Questions:
+1. Which letter immediately follows A?
+    A) C
+    B) A
+    C) B
+    D) A
+Answer: C) B
+
+2. You're 4th place right now in a race. What place will you be in when you pass the person in 3rd place?
+    A) 1st
+    B) 2nd
+    C) 3rd
+    D) None of the above
+Answer: C) 3rd
+
+3. Jimmy's father has three sons- Paul I and Paul II. Can you guess the name of the third son?
+    A) Paul III
+    B) Jeronimoh
+    C) Jimmy
+    D) None of the above
+Answer: C) Jimmy
+
+4. A farmer has 57 goats. All of them but 16 die. How many goats are alive?
+    A) 41
+    B) 25
+    C) 33
+    D) 16
+Answer: D) 16
+
+5. There are 45 mangoes in your basket. You take five out of the basket. How many mangoes are left?
+    A) five
+    B) 40
+    C) fourty-five
+    D) fourty
+Answer: C) fourty-five
