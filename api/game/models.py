@@ -35,3 +35,4 @@ class Event(Player):
     answer: str | None = None
     leaderboard: list[PlayerDTO] | None = None
     player_count: int = 0
+    error: str | None = None

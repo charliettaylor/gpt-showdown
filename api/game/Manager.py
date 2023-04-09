@@ -65,14 +65,17 @@ class Manager:
             # make host have id of game
             event.game_id = self.hosts[event.player_id]
             game = self.games[event.game_id]
-            await game.add_player(event)
+            await game.start_lobby()
             print(event)
             return
 
         if event.game_id not in self.games.keys():
             print("Game does not exist", event.game_id)
             assert event.socket, "Error: broken socket."
-            await event.socket.send_text("Game does not exist")
+            copy = Event(**event.dict())
+            copy.state = "ERROR"
+            copy.error = "Game does not exist"
+            await event.socket.send_text(copy)
             return
 
         assert event.game_id is not None, "Error: game id is Invalid"

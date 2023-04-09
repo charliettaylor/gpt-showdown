@@ -47,6 +47,10 @@ class Game:
         self.p_count += 1
 
         self.players.append(player)
+        await self.broadcast("LOBBY")
+
+    async def start_lobby(self):
+        await self.broadcast("LOBBY")
 
     # async def remove_player(self, player: Player):
     #     self.players.remove(player)
