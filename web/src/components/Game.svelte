@@ -55,19 +55,18 @@
     {/each}
   {/if}
 
-  {#if game.answer}
-    <h1>
-      {game.answer}
-    </h1>
-  {/if}
-
-  {#if game.leaderboard}
-    <h1>
-      {game.question.text}
-    </h1>
+  {#if game.state == "ANSWER"}
+    <h2>Answer</h2>
+    <h3>{game.answer}</h3>
+    <h3>Answer</h3>
+    <h1>Leaderboard</h1>
     {#each game.leaderboard as player}
       <h3>{player.nickname}: {player.score}</h3>
     {/each}
+  {/if}
+
+  {#if game.state == "GAMEOVER"}
+    <h1>Game Over!</h1>
   {/if}
 </div>
 

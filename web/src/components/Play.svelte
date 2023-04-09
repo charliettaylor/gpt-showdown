@@ -118,6 +118,9 @@
         </form>
       {/if}
     </div>
+    <footer>
+      <small>Create a quiz <a href="/host">here!</a></small>
+    </footer>
   {/if}
   {#if error.length > 0}
     <h1>{error}</h1>
@@ -128,16 +131,17 @@
     <h1>Waiting for game to start...</h1>
   {/if}
 
-  {#if game.countdown}
+  {#if game.state == "COUNTDOWN"}
     <h1>
       {game.countdown}
     </h1>
   {/if}
 
-  {#if game.question}
-    <h1>
-      {game.question.text}
-    </h1>
+  {#if game.choice}
+    <h1>Answer Submitted...</h1>
+  {/if}
+
+  {#if game.question && !game.choice}
     {#each game.question.choices as choice}
       <button on:click={() => answer(choice.choice)}>{choice.value}</button>
     {/each}
@@ -150,9 +154,7 @@
   {/if}
 
   {#if game.leaderboard}
-    <h1>
-      {game.question.text}
-    </h1>
+    <h1>Leaderboard</h1>
     {#each game.leaderboard as player}
       <h3>{player.nickname}: {player.score}</h3>
     {/each}
@@ -160,8 +162,18 @@
 </div>
 
 <style>
+  footer {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    padding: 10px;
+  }
+
   button {
-    background-color: #333;
+    border: 4px solid black;
+    background-color: white;
+    margin: auto 2rem;
   }
 
   .connection {

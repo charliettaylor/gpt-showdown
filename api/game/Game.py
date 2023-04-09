@@ -94,6 +94,7 @@ class Game:
 
                 if state == "COUNTDOWN":
                     copy.countdown = countdown
+                    print("balls, bigger balls", copy.dict())
                     await player.socket.send_text(json.dumps(copy.dict()))
                     continue
                 elif state == "QUESTION":
@@ -109,6 +110,7 @@ class Game:
                         sorted(self.players, key = lambda x: x.score, reverse=True)
                     )[:min(3, len(self.players))]
 
+                print("balls, bigger balls", copy.dict())
                 await player.socket.send_text(json.dumps(copy.dict()))
             except Exception as e:
                 print("Error: ", e)

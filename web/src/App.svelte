@@ -8,9 +8,6 @@
 <main>
   {#if path == "/"}
     <Play />
-    <footer>
-      <small>Create a quiz <a href="/host">here!</a></small>
-    </footer>
   {/if}
   {#if path == "/host"}
     <Host />
@@ -18,11 +15,4 @@
 </main>
 
 <style>
-  footer {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    padding: 10px;
-  }
 </style>

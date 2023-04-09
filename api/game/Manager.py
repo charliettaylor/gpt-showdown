@@ -82,10 +82,10 @@ class Manager:
             print("Game does not exist", event.game_id)
             assert event.socket, "Error: broken socket."
             copy = Event(**event.dict())
+            copy.socket = None
             copy.state = "ERROR"
             copy.error = "Game does not exist"
-            copy.socket = None
-            await event.socket.send_text(copy)
+            await event.socket.send_text(json.dumps(copy.dict()))
             return
 
         assert event.game_id is not None, "Error: game id is Invalid"
