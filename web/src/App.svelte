@@ -1,28 +1,29 @@
 <script lang="ts">
   import Home from "./components/Home.svelte";
+  import Host from "./components/Host.svelte";
+
+  const path = location.pathname;
+
 </script>
 
-<nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
-  <div class="navbar-brand">
-    <a
-      href="#"
-      role="button"
-      class="navbar-burger"
-      aria-label="menu"
-      aria-expanded="false"
-    >
-      <span aria-hidden="true" />
-      <span aria-hidden="true" />
-      <span aria-hidden="true" />
-    </a>
-  </div>
-</nav>
 <main>
-  <Home />
+  {#if (path == "/")}
+    <Home />
+    <footer>
+      <small>Create a quiz <a href="/host">here!</a></small>
+    </footer>
+  {/if}
+  {#if (path == "/host")}
+    <Host />
+  {/if}
 </main>
 
 <style>
-  .navbar {
-    background: none;
+  footer {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    padding: 10px;
   }
 </style>
