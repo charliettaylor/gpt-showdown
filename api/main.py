@@ -1,17 +1,17 @@
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-from assistant import Assistant
-from fastapi.middleware.cors import CORSMiddleware
-
-from db import (
-    create_schema,
-    insert_question,
-    get_question_by_id,
-    insert_choice,
-    get_choice_by_id,
-)
 from collections import defaultdict
 
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+
+from assistant import Assistant
+from db import (
+    create_schema,
+    get_choice_by_id,
+    get_question_by_id,
+    insert_choice,
+    insert_question,
+)
 from parse_gpt import parse_gpt
 
 app = FastAPI()
@@ -27,6 +27,13 @@ app.add_middleware(
 
 app = FastAPI()
 
+# Create a new gpt instance per game id
+GameID = str
+gpt_instances: defaultdict[GameID, Assistant] = defaultdict(lambda: Assistant())
+
+active_games = set(["AAA"])
+
+
 # create tables on startup
 create_schema()
 
@@ -34,13 +41,6 @@ create_schema()
 @app.get("/")
 async def root():
     return {"message": "gpt showdown :)"}
-
-
-# Create a new gpt instance per game id
-GameID = str
-gpt_instances: defaultdict[GameID, Assistant] = defaultdict(lambda: Assistant())
-
-active_games = set(["AAA"])
 
 
 @app.get("/api/question/{id}")
