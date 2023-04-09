@@ -38,8 +38,8 @@ def insert_choice(question_id, choice) -> bool:
     con.commit()
     return cur.rowcount == 1
 
+
 def get_choice_by_id(id):
     cur = con.cursor()
     cur.execute("SELECT * FROM choices WHERE id = ?", (id,))
     return cur.fetchone()
-
