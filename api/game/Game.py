@@ -51,10 +51,10 @@ class Game:
             if kGPT_ID not in self.choices.keys():
                 gpt_answer = await self.get_gpt_response()
                 self.choices[kGPT_ID] = gpt_answer
-                print(self.choices)
+                # print(self.choices)
 
             await sleep(1)
-            await self.broadcast("TIME", 30 - self.time)
+            # await self.broadcast("TIME", 30 - self.time)
             self.time += 1
 
             if self.time >= 30 or len(self.choices.keys()) == len(self.players) - 1:
