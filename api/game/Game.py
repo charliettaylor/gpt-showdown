@@ -1,11 +1,12 @@
 from ..assistant import Assistant
 from .models import Player, PlayerID, Event
 from ..schema import McQuestionDTO, Question, McQuestion
-from asyncio import sleep, run
+from asyncio import create_task, sleep, run
 from ..db import get_questions_by_quiz  # HACK: for debugging GPT integration
 from dataclasses import dataclass
 from ..parse_gpt import parse_gpt
 import json
+from asyncio import create_task, gather, run
 
 """
 Each game instance contains currently connected players.
@@ -13,6 +14,7 @@ Each game instance contains currently connected players.
 
 
 kPOINTS = 1_000
+kGPT_ID = 1337
 
 
 GameID = str
@@ -28,17 +30,29 @@ class Game:
         self.time = 0
         self.p_count = 0
         self.host_id = host_id
-        self.gpt = Assistant()
+        self.gpt = None
 
     def __repr__(self):
         out = f"Game[{self.state=}, {self.players=}]"
         return out
+
+    async def setup_gpt(self, host_event: Event):
+        gpt_event = Event(nickname="GPT", action="JOIN", player_id=kGPT_ID, socket=None)
+
+        self.gpt = Assistant()
+
+        self.players.append(gpt_event)
 
     async def game_loop(self):
         self.state = "PLAY"
         await self.broadcast("COUNTDOWN", 3)
         await self.broadcast("QUESTION")
         while self.state != "FINISHED":
+            if kGPT_ID not in self.choices.keys():
+                gpt_answer = await self.get_gpt_response()
+                self.choices[kGPT_ID] = gpt_answer
+                print(self.choices)
+
             await sleep(1)
             await self.broadcast("TIME", 30 - self.time)
             self.time += 1
@@ -56,6 +70,10 @@ class Game:
 
     async def start_lobby(self):
         await self.broadcast("LOBBY")
+        task = create_task(self.setup_gpt(self.players[0]))
+        await gather(task)
+        # t = Thread(target=self.setup_gpt, args=[self.players[0]])
+        # t.run()
 
     # async def remove_player(self, player: Player):
     #     self.players.remove(player)
@@ -79,16 +97,24 @@ class Game:
             await self.handle_end_game()
             return
 
-        for pid in self.choices.keys():
-            self.choices[pid] = ""
+        self.choices.clear()
 
         await self.broadcast("COUNTDOWN", 3)
         await self.broadcast("QUESTION")
 
     async def broadcast(self, state: str, countdown: int = None):
         for player in self.players:
+            if player.player_id == kGPT_ID:
+                continue
+            # if state == "QUESTION" and player.player_id == kGPT_ID:
+            #     gpt_answer = await self.get_gpt_response()
+            #     self.choices[kGPT_ID] = gpt_answer
+            #     print(self.choices)
+
             try:
-                assert player.socket is not None, "Error: player socket is invalid"
+                assert (
+                    player.socket is not None and player.player_id is not kGPT_ID
+                ), "Error: player socket is invalid"
                 dic = player.dict()
                 del dic["socket"]
                 copy = Event(**dic)
@@ -99,12 +125,12 @@ class Game:
 
                 if state == "COUNTDOWN":
                     copy.countdown = countdown
-                    print("balls, bigger balls", copy.dict())
                     await player.socket.send_text(json.dumps(copy.dict()))
                     continue
                 elif state == "QUESTION":
                     x = self.questions[self.current_question_id]
                     copy.question = McQuestionDTO(text=x.question, choices=x.choices)
+
                 elif state == "GAMEOVER":
                     copy.leaderboard = [
                         {"nickname": x.nickname, "score": x.score}
@@ -114,12 +140,13 @@ class Game:
                     ]
                 elif state == "ANSWER":
                     copy.answer = self.questions[self.current_question_id].answer
-                    copy.leaderboard = list(
-                        sorted(self.players, key=lambda x: x.score, reverse=True)
-                    )[: min(3, len(self.players))]
-                elif state == "TIME":
-                    copy.countdown = countdown
-            
+                    copy.leaderboard = [
+                        {"nickname": x.nickname, "score": x.score}
+                        for x in list(
+                            sorted(self.players, key=lambda x: x.score, reverse=True)
+                        )[: min(3, len(self.players))]
+                    ]
+
                 await player.socket.send_text(json.dumps(copy.dict()))
             except Exception as e:
                 print("Error: ", e)
@@ -131,9 +158,12 @@ class Game:
             await self.broadcast(state, countdown - 1)
 
     def check_answer(self):
-        for player_id, choice in self.choices.items():
-            if choice == self.questions[self.current_question_id].answer:
-                self.players[player_id].score += kPOINTS
+        for i, player in enumerate(self.players):
+            if player.player_id not in self.choices:
+                continue
+            player_choice = self.choices[player.player_id]
+            if player_choice == self.questions[self.current_question_id].answer:
+                self.players[i].score += kPOINTS
 
     # TODO: move this to different file
 
@@ -141,9 +171,8 @@ class Game:
         """
         Query database and ask GPT what it thinks the answer is.
         """
-        questions = get_questions_by_quiz(1)
 
-        current_question = questions[self.current_question_id]
+        current_question = self.questions[self.current_question_id]
         dto = McQuestionDTO(
             text=current_question.question, choices=current_question.choices
         )
@@ -157,7 +186,7 @@ class Game:
         initial_gpt_response = self.gpt.write_message(
             role="user", content=formatted_for_gpt
         )
-        parsed_gpt_response = parse_gpt(
+        parsed_gpt_response = await parse_gpt(
             initial_gpt_response
         )  # to the form "A" or "B" or "C" or "D"
 
@@ -167,6 +196,7 @@ class Game:
             "initial_gpt_response": initial_gpt_response,
             "question_text": formatted_for_gpt,
         }
+        assert parsed_gpt_response in "ABCD", "Bad GPT Response"
 
         print("GPT-DEBUG ", debug)
         return parsed_gpt_response

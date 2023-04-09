@@ -10,6 +10,7 @@ class Assistant:
         self.messages = []
         self.prompt = self.fetch_prompt()
         self.meta_setup()
+        print("GPT CONNECTED -- ")
 
     def fetch_prompt(self):
         dat = None
