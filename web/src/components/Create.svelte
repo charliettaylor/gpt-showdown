@@ -34,7 +34,7 @@
   };
 
   const create_quiz = () => {
-    fetch("http://localhost:8000/api/quiz", {
+    fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

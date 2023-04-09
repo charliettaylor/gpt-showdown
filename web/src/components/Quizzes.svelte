@@ -14,7 +14,8 @@
   let quizzes = [];
 
   onMount(async () => {
-    const res = await fetch("http://localhost:8000/api/get_quizzes");
+    const url = "https://gptquiz.xyz/api/get_quizzes";
+    const res = await fetch(url);
     quizzes = await res.json();
   });
 

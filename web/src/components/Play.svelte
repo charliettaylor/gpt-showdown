@@ -46,7 +46,8 @@
   let error = "";
 
   onMount(() => {
-    ws = new WebSocket("ws://localhost:8000/ws");
+    const url = "wss://gptquiz.xyz/ws";
+    ws = new WebSocket(url);
 
     ws.addEventListener("open", (event) => {
       ws_open = true;

@@ -26,7 +26,9 @@
         time -= 1;
       }
     }, 1000);
-    ws = new WebSocket("ws://localhost:8000/ws");
+
+    const url = "wss://gptquiz.xyz/ws";
+    ws = new WebSocket(url);
 
     ws.addEventListener("message", (e) => {
       const msg = JSON.parse(e.data);
