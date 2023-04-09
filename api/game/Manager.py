@@ -16,6 +16,7 @@ Uses a Singleton design pattern.
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
+
 class Manager:
     __instance = None
 
@@ -32,7 +33,7 @@ class Manager:
         if Manager.__instance is not None:
             raise Exception("This class is a singleton!")
 
-        self.hosts: dict[PlayerID, Game] = dict()
+        self.hosts: dict[PlayerID, GameID] = dict()
         self.games: dict[GameID, Game] = dict()
         Manager.__instance = self
 
@@ -43,7 +44,7 @@ class Manager:
 
         return random_id  # [A-Z]{3}
 
-    def create_game(self, host_id: int):
+    def create_game(self, host_id: PlayerID):
         game_id = self.generate_game_id()
         game = Game(host_id)
         self.games[game_id] = game
@@ -70,7 +71,7 @@ class Manager:
         if event.action == "JOIN":
             await game.add_player(event)
         elif event.action == "SUBMIT":
-            await game.add_player_choice(event)
+            await game.add_player_choice(event.player_id, event.choice)
         elif event.action == "LEAVE":
             await game.remove_player(event)
 
@@ -87,5 +88,6 @@ class Manager:
 
 if __name__ == "__main__":
     man = Manager.get_instance()
-    man.create_game()
+    assert man is not None, "Error: Manager is None!"
+    man.create_game(host_id=0)
     print(man.games)

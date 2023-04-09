@@ -1,4 +1,5 @@
 from collections import defaultdict
+import json
 
 from fastapi import FastAPI, HTTPException, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
@@ -46,6 +47,7 @@ async def create_quiz(quiz: CreateQuiz):
     print("penis", quiz_id)
     for question in quiz.questions:
         id = insert_question(quiz_id, question)
+        assert id is not None, "Error: Bad ID retrieved"
         for choice in question.choices:
             insert_choice(id, choice)
 
@@ -55,11 +57,14 @@ async def create_quiz(quiz: CreateQuiz):
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     man = Manager.get_instance()
+    assert man is not None, "Error: Manager is none in WebSocket endpoint!"
     await websocket.accept()
     while True:
         data = await websocket.receive_text()
+        as_json = json.loads(data)  # TODO: verify that this works
+        event = Event(**as_json, _socket=websocket)
 
-        await man.dispatch(event=Event(socket=websocket, **data))
+        await man.dispatch(event=event)
 
 
 # TODO: move this to different file

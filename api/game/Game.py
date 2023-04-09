@@ -1,5 +1,5 @@
 from .models import Player, Event, PlayerID
-from api.schema import Question
+from api.schema import Question  # type: ignore
 from asyncio import sleep
 
 
@@ -16,7 +16,7 @@ class Game:
         self.state: str | None = "LOBBY"
         self.players: list[Player] = []
         self.questions: list[Question] = []
-        self.current_choices = dict()
+        self.current_choices = dict()  # TODO: What is this?
         self.time = 0
         self.p_count = 0
 
@@ -39,7 +39,7 @@ class Game:
 
         self.players.append(player)
         if player._socket:
-            await player._socket.send_text(player)
+            await player._socket.send_text(repr(player))  # TODO: JSON-ify
 
     async def remove_player(self, player: Player):
         self.players.remove(player)

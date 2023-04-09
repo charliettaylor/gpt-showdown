@@ -16,7 +16,7 @@ def create_schema():
     con.commit()
 
 
-def insert_quiz(name: str) -> bool:
+def insert_quiz(name: str) -> int | None:
     print("penis", name)
     cur = con.cursor()
     cur.execute("INSERT INTO quizzes (name) VALUES (?)", (name,))
@@ -24,7 +24,7 @@ def insert_quiz(name: str) -> bool:
     return cur.lastrowid
 
 
-def insert_question(quiz_id: int, q: CreateQuestion) -> bool:
+def insert_question(quiz_id: int, q: CreateQuestion) -> int | None:
     cur = con.cursor()
     cur.execute(
         "INSERT INTO questions (quiz_id, question, answer) VALUES (?, ?, ?)",
@@ -34,10 +34,11 @@ def insert_question(quiz_id: int, q: CreateQuestion) -> bool:
     return cur.lastrowid
 
 
-def insert_choice(question_id: int, c: CreateChoice) -> bool:
+def insert_choice(question_id: int, c: CreateChoice) -> int | None:
     cur = con.cursor()
     cur.execute(
-        "INSERT INTO choices (question_id, choice, value) VALUES (?, ?, ?)", (question_id, c.choice, c.value)
+        "INSERT INTO choices (question_id, choice, value) VALUES (?, ?, ?)",
+        (question_id, c.choice, c.value),
     )
     con.commit()
 
