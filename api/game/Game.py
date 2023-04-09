@@ -99,12 +99,12 @@ class Game:
                     copy.question = McQuestionDTO(text=x.question, choices=x.choices)
                 elif state == "GAMEOVER":
                     copy.leaderboard = list(
-                        sorted(player, key = lambda x: x.score, reverse=True)
+                        sorted(self.players, key = lambda x: x.score, reverse=True)
                     )[:min(3, len(self.players))]
                 elif state == "ANSWER":
                     copy.answer = self.questions[self.current_question_id].answer
                     copy.leaderboard = list(
-                        sorted(player, key = lambda x: x.score, reverse=True)
+                        sorted(self.players, key = lambda x: x.score, reverse=True)
                     )[:min(3, len(self.players))]
 
                 await player.socket.send_text(json.dumps(copy.dict()))
