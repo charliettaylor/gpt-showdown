@@ -1,23 +1,20 @@
 <script>
-  import { onMount } from "svelte";
-  import Quiz from "./Quiz.svelte";
+  import Quizzes from "./Quizzes.svelte";
+  import Game from "./Game.svelte";
+  let state = "quizzes";
+  let quiz;
 
-  let quizzes = [];
-
-  onMount(async () => {
-    const res = await fetch("http://localhost:8000/api/get_quizzes");
-    quizzes = await res.json();
-  });
+  function handleMessage(event) {
+    state = "host_game";
+    quiz = event.detail.quiz;
+  }
 </script>
 
-<div class="block">
-  <div class="field search">
-    <label for="search">Filter</label>
-    <input class="input" name="search" type="text" />
-  </div>
-  <div class="block">
-    {#each quizzes as quiz}
-      <Quiz name={quiz.name} category={quiz.category} />
-    {/each}
-  </div>
+<div>
+  {#if state == "quizzes"}
+    <Quizzes on:select_quiz={handleMessage} />
+  {/if}
+  {#if state == "host_game"}
+    <Game {quiz} />
+  {/if}
 </div>
