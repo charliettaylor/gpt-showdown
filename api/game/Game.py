@@ -16,7 +16,7 @@ class Game:
         self.state: str | None = "LOBBY"
         self.players: list[Player] = []
         self.questions: list[Question] = []
-        self.current_choices = dict()  # TODO: What is this?
+        self.current_choices = dict()
         self.time = 0
         self.p_count = 0
         self.host_id = host_id
@@ -39,13 +39,14 @@ class Game:
         self.p_count += 1
 
         self.players.append(player)
-        if player._socket:
-            await player._socket.send_text(repr(player))  # TODO: JSON-ify
+        if player.socket:
+            as_json = str(player.dict())
+            await player.socket.send_text(as_json)
 
     async def remove_player(self, player: Player):
         self.players.remove(player)
-        if player._socket:
-            await player._socket.send_text("LEAVE")
+        if player.socket:
+            await player.socket.send_text("LEAVE")
 
     async def add_player_choice(self, player_id, choice):
         self.current_choices[player_id] = choice
@@ -62,9 +63,9 @@ class Game:
 
     async def broadcast(self, message: str):
         for player in self.players:
-            if player._socket is None:
+            if player.socket is None:
                 continue  # HACK: for dev
-            await player._socket.send_text(message)
+            await player.socket.send_text(message)
 
 
 """

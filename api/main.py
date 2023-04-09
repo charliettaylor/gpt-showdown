@@ -45,7 +45,7 @@ async def create_quiz(quiz: CreateQuiz):
 
     if quiz_id is None:
         raise HTTPException(status_code=400, detail="Quiz not created")
-    print("penis", quiz_id)
+
     for question in quiz.questions:
         id = insert_question(quiz_id, question)
         assert id is not None, "Error: Bad ID retrieved"
@@ -63,8 +63,9 @@ async def websocket_endpoint(websocket: WebSocket):
     while True:
         data = await websocket.receive_text()
         try:
-            as_json = json.loads(data)  # TODO: verify that this works
-            event = Event(**as_json, _socket=websocket)
+            as_json = json.loads(data)
+            as_json["socket"] = websocket
+            event = Event(**as_json)
         except:
             await websocket.send_text(
                 "Invalid JSON in WebSocket body or Invalid Event model"

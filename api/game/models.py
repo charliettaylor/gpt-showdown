@@ -12,7 +12,10 @@ class Player(BaseModel):
     player_id: PlayerID | None = None
     game_id: str | None = None
     choice: str | None = None
-    _socket: WebSocket | None = None
+    socket: WebSocket | None = None
+
+    class Config:
+        arbitrary_types_allowed = True
 
 
 class Event(Player):
