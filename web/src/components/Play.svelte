@@ -37,7 +37,7 @@
 
 <div>
   {#if game.state == "NOT_CREATED"}
-    <div>
+    <div id="main">
       <Shape shape="circle" />
       <Shape shape="line" />
       <Shape shape="diamond" />
@@ -123,6 +123,11 @@
 
 <style>
   button {
-    background-color: red;
+    background-color: #333;
+  }
+
+  #main {
+    top: 0;
+    min-height: 90vh;
   }
 </style>
