@@ -101,7 +101,11 @@ class Game:
 
         await self.broadcast("NEXTQUESTION")
         await self.countdown(2)
+        await self.broadcast_question()
+
+    async def broadcast_question(self):
         current_question = self.questions[self.current_question_id].question
+        # TODO: send choices too
         await self.broadcast(current_question)
 
     async def broadcast(self, message: str):
