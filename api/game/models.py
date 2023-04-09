@@ -11,7 +11,7 @@ class Player(BaseModel):
     player_id: int
     game_id: str
     choice: str
-    socket: WebSocket
+    _socket: WebSocket
 
 
 class Event(Player):

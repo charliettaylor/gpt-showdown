@@ -1,4 +1,4 @@
-from models import Player, Event
+from .models import Player, Event
 from ..schema import Question
 from time import sleep
 
@@ -36,11 +36,11 @@ class Game:
         self.p_count += 1
 
         self.players.append(player)
-        player.socket.send_text(player)
+        player._socket.send_text(player)
 
     def remove_player(self, player: Player):
         self.players.remove(player)
-        player.socket.send_text("LEAVE")
+        player._socket.send_text("LEAVE")
 
     def add_player_choice(self, player_id, choice):
         self.current_choices[player_id] = choice
@@ -57,7 +57,7 @@ class Game:
 
     def broadcast(self, message: str):
         for player in self.players:
-            player.socket.send_text(message)
+            player._socket.send_text(message)
 
 
 """

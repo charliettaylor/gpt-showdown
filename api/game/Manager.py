@@ -1,6 +1,6 @@
 from collections import defaultdict
-from Game import Game, GameID
-from Event import Event
+from .Game import Game, GameID
+from .models import Event
 from random import choice
 from string import ascii_uppercase
 from threading import Thread

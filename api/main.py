@@ -4,13 +4,12 @@ from fastapi import FastAPI, HTTPException, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 
-from assistant import Assistant
-from db import create_schema, insert_choice, insert_question, insert_quiz
-
-from parse_gpt import parse_gpt
-from schema import CreateQuiz
+from .assistant import Assistant
+from .db import create_schema, insert_choice, insert_question, insert_quiz
+from .parse_gpt import parse_gpt
+from .schema import CreateQuiz
 from .game.Manager import Manager
-from .game.Event import Event
+from .game.models import Event
 
 app = FastAPI()
 
@@ -22,10 +21,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-app = FastAPI()
-
 # Create a new gpt instance per game id
+GameID = str
 gpt_instances: defaultdict[GameID, Assistant] = defaultdict(lambda: Assistant())
 
 active_games = set(["AAA"])
@@ -38,13 +35,6 @@ create_schema()
 @app.get("/")
 async def root():
     return {"message": "gpt showdown :)"}
-
-
-# Create a new gpt instance per game id
-GameID = str
-gpt_instances: defaultdict[GameID, Assistant] = defaultdict(lambda: Assistant())
-
-active_games = set(["AAA"])
 
 
 @app.post("/api/quiz")

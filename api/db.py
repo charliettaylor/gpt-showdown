@@ -1,5 +1,5 @@
 import sqlite3
-from schema import CreateQuestion, CreateChoice
+from .schema import CreateQuestion, CreateChoice
 
 con = sqlite3.connect("qc.db")
 
@@ -41,5 +41,5 @@ def insert_choice(question_id: int, c: CreateChoice) -> bool:
     )
     con.commit()
 
-    return cur.lastrowid∏
+    return cur.lastrowid
 
