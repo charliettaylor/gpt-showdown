@@ -1,6 +1,7 @@
 from .models import Player, Event, PlayerID
 from ..schema import Question
 from asyncio import sleep
+from dataclasses import dataclass
 
 
 """
@@ -10,13 +11,19 @@ Each game instance contains currently connected players.
 GameID = str
 
 
+@dataclass
+class PlayerInfo:
+    choice: str
+    score: int = 0
+
+
 class Game:
     def __init__(self, host_id: PlayerID):
         self.current_question_id = 0
         self.state: str | None = "LOBBY"
         self.players: list[Player] = []
         self.questions: list[Question] = []
-        self.current_choices = dict()
+        self.player_info: dict[PlayerID, PlayerInfo] = dict()
         self.time = 0
         self.p_count = 0
         self.host_id = host_id
@@ -49,9 +56,10 @@ class Game:
             await player.socket.send_text("LEAVE")
 
     async def add_player_choice(self, player_id, choice):
-        self.current_choices[player_id] = choice
+        self.player_info[player_id].choice = choice
 
     async def next_question(self):
+        self.check_answer()
         self.current_question_id += 1
         if self.current_question_id >= len(self.questions):
             self.state = "FINISHED"
@@ -66,6 +74,11 @@ class Game:
             if player.socket is None:
                 continue  # HACK: for dev
             await player.socket.send_text(message)
+
+    def check_answer(self):
+        for player in self.player_info:
+            if player.choice == self.questions[self.current_question_id].correct:
+                self.player_info[player].score += 1000
 
 
 """

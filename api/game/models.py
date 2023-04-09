@@ -8,9 +8,10 @@ PlayerID = int
 
 
 class Player(BaseModel):
-    nickname: str = ""
+    nickname: str
     player_id: PlayerID | None = None
     game_id: str | None = None
+    quiz_id: int
     choice: str | None = None
     socket: WebSocket | None = None
 

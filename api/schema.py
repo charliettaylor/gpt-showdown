@@ -37,6 +37,5 @@ class CreateQuestion(QuestionBase):
     choices: list[CreateChoice]
 
 
-class CreateQuiz(BaseModel):
-    name: str
+class CreateQuiz(QuizBase):
     questions: list[CreateQuestion]

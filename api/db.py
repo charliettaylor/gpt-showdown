@@ -1,7 +1,9 @@
 import sqlite3
 from .schema import CreateQuestion, CreateChoice
+from .schema import Question
 
 con = sqlite3.connect("qc.db")
+con.row_factory = sqlite3.Row
 
 QUIZZES = "CREATE TABLE IF NOT EXISTS quizzes (id INTEGER PRIMARY KEY, name TEXT)"
 QUESTIONS = "CREATE TABLE IF NOT EXISTS questions (id INTEGER PRIMARY KEY, quiz_id INTEGER, question TEXT, answer TEXT)"
@@ -50,3 +52,17 @@ def get_all_quizzes():
     cur.execute("SELECT * FROM QUIZZES")
     rows = cur.fetchall()
     return rows
+
+
+def get_questions_by_quiz(quiz_id: int) -> list[Question]:
+    cur = con.cursor()
+
+    cur.execute("SELECT * FROM questions WHERE quiz_id = ?", (str(quiz_id)))
+    rows = cur.fetchall()
+    return [Question(**x) for x in rows]
+
+
+if __name__ == "__main__":
+    rows = get_questions_by_quiz(1)
+    for row in rows:
+        print(row)

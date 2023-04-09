@@ -1,6 +1,7 @@
 from collections import defaultdict
 from .Game import Game, GameID
 from .models import Event, PlayerID
+from ..db import get_questions_by_quiz
 from random import choice
 from string import ascii_uppercase
 from threading import Thread
@@ -44,11 +45,14 @@ class Manager:
 
         return random_id  # [A-Z]{3}
 
-    def create_game(self, host_id: PlayerID):
+    def create_game(self, event: Event):
         game_id = self.generate_game_id()
-        game = Game(host_id)
+        game = Game(event.player_id)
+
+        game.questions = get_questions_by_quiz(event.quiz_id)
+
         self.games[game_id] = game
-        self.hosts[host_id] = game_id
+        self.hosts[event.player_id] = game_id
 
     async def dispatch(self, event: Event):
         print(event)
@@ -56,7 +60,7 @@ class Manager:
             # player needs id
             event.player_id = 0
             # make the new game
-            self.create_game(event.player_id)
+            self.create_game(event)
             # make host have id of game
             event.game_id = self.hosts[event.player_id]
 
