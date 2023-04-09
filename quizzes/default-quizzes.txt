@@ -24,10 +24,10 @@ Answer: A) Sculpture
 
 Science:
 1. What is the smallest unit of life?
-A) Atom
-B) Cell
-C) Molecule
-D) Virus
+    A) Atom
+    B) Cell
+    C) Molecule
+    D) Virus
 Answer: B) Cell
 
 2. What is the name of the process by which a solid changes directly into a gas?
@@ -47,7 +47,7 @@ Answer: B) Nitrogen
 
 
 Entertainment:
-1, Who played the character of Katniss Everdeen in the movie "The Hunger Games"?
+1. Who played the character of Katniss Everdeen in the movie "The Hunger Games"?
     A) Emma Watson
     B) Jennifer Lawrence
     C) Kristen Stewart
@@ -60,7 +60,7 @@ Answer: B) Jennifer Lawrence
     B) Kendall Jenner
     C) Khris Jenner
     D) Kylie Jenner
-Answer: Kylie Jenner - $15 million
+Answer: D) Kylie Jenner - $15 million
 
 3. Who wrote the Twilight book series?
     A) Stephanie Meyer
@@ -93,7 +93,7 @@ Answer: C) China
     D) Alaska
 Answer: D) Alaska
 
-3. True or False: The Pacific Ocean is the largest ocean in the world.
+3. True or False - The Pacific Ocean is the largest ocean in the world.
     A) True
     B) False
     C) None

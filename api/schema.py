@@ -3,6 +3,7 @@ from pydantic import BaseModel
 
 class QuizBase(BaseModel):
     name: str
+    category: str
 
 
 class Quiz(QuizBase):

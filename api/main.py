@@ -13,6 +13,7 @@ from .db import (
     insert_question,
     insert_quiz,
     get_all_quizzes,
+    get_all_quiz_categories,
 )
 from .parse_gpt import parse_gpt
 from .schema import CreateQuiz
@@ -47,7 +48,7 @@ async def root():
 
 @app.post("/api/quiz")
 async def create_quiz(quiz: CreateQuiz):
-    quiz_id = insert_quiz(quiz.name)
+    quiz_id = insert_quiz(quiz)
 
     if quiz_id is None:
         raise HTTPException(status_code=400, detail="Quiz not created")
@@ -64,6 +65,11 @@ async def create_quiz(quiz: CreateQuiz):
 @app.get("/api/get_quizzes")
 async def get_quizzes():
     return get_all_quizzes()
+
+
+@app.get("/api/get_quiz_categories")
+async def get_quiz_categories():
+    return get_all_quiz_categories()
 
 
 @app.websocket("/ws")

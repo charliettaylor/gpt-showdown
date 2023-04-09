@@ -1,11 +1,10 @@
 import sqlite3
-from .schema import CreateQuestion, CreateChoice
-from .schema import Question
+from .schema import CreateQuestion, CreateChoice, CreateQuiz, Question
 
 con = sqlite3.connect("qc.db")
 con.row_factory = sqlite3.Row
 
-QUIZZES = "CREATE TABLE IF NOT EXISTS quizzes (id INTEGER PRIMARY KEY, name TEXT)"
+QUIZZES = "CREATE TABLE IF NOT EXISTS quizzes (id INTEGER PRIMARY KEY, name TEXT, category TEXT)"
 QUESTIONS = "CREATE TABLE IF NOT EXISTS questions (id INTEGER PRIMARY KEY, quiz_id INTEGER, question TEXT, answer TEXT)"
 CHOICES = "CREATE TABLE IF NOT EXISTS choices (id INTEGER PRIMARY KEY, question_id INTEGER,choice TEXT, value TEXT)"
 
@@ -18,10 +17,11 @@ def create_schema():
     con.commit()
 
 
-def insert_quiz(name: str) -> int | None:
-    print("penis", name)
+def insert_quiz(quiz: CreateQuiz) -> int | None:
     cur = con.cursor()
-    cur.execute("INSERT INTO quizzes (name) VALUES (?)", (name,))
+    cur.execute(
+        "INSERT INTO quizzes (name, category) VALUES (?, ?)", (quiz.name, quiz.category)
+    )
     con.commit()
     return cur.lastrowid
 
@@ -60,6 +60,13 @@ def get_questions_by_quiz(quiz_id: int) -> list[Question]:
     cur.execute("SELECT * FROM questions WHERE quiz_id = ?", (str(quiz_id)))
     rows = cur.fetchall()
     return [Question(**x) for x in rows]
+
+
+def get_all_quiz_categories():
+    cur = con.cursor()
+    cur.execute("SELECT DISTINCT category FROM QUIZZES")
+    rows = cur.fetchall()
+    return rows
 
 
 if __name__ == "__main__":
