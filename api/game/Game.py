@@ -73,7 +73,7 @@ class Game:
             return
 
         for pid in self.choices.keys():
-            self.choices[pid].choice = ""
+            self.choices[pid] = ""
 
         await self.broadcast("COUNTDOWN", 3)
         await self.broadcast("QUESTION")
