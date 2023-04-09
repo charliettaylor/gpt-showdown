@@ -84,7 +84,9 @@ class Game:
         for player in self.players:
             try:
                 assert player.socket is not None, "Error: player socket is invalid"
-                copy = Event(**player.dict())
+                dic = player.dict()
+                del dic["socket"]
+                copy = Event(**dic)
                 copy.socket = None
                 copy.state = state
                 copy.player_count = len(self.players)
@@ -98,9 +100,9 @@ class Game:
                     x = self.questions[self.current_question_id]
                     copy.question = McQuestionDTO(text=x.question, choices=x.choices)
                 elif state == "GAMEOVER":
-                    copy.leaderboard = list(
+                    copy.leaderboard = [{'nickname': x.nickname, 'score': x.score} for x in list(
                         sorted(self.players, key = lambda x: x.score, reverse=True)
-                    )[:min(3, len(self.players))]
+                    )[:min(3, len(self.players))]]
                 elif state == "ANSWER":
                     copy.answer = self.questions[self.current_question_id].answer
                     copy.leaderboard = list(

@@ -84,6 +84,7 @@ class Manager:
             copy = Event(**event.dict())
             copy.state = "ERROR"
             copy.error = "Game does not exist"
+            copy.socket = None
             await event.socket.send_text(copy)
             return
 
