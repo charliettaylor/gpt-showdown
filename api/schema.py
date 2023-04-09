@@ -47,5 +47,5 @@ class McQuestion(QuestionBase):
 
 
 class McQuestionDTO(BaseModel):
-    question: str
+    text: str
     choices: list[ChoiceBase]

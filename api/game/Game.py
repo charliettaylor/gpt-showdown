@@ -1,4 +1,4 @@
-from .models import Player, PlayerID
+from .models import Player, PlayerID, Event
 from ..schema import McQuestionDTO, Question, McQuestion
 from asyncio import sleep
 from dataclasses import dataclass
@@ -12,12 +12,6 @@ Each game instance contains currently connected players.
 kPOINTS = 1_000
 
 
-@dataclass
-class PlayerInfo:
-    choice: str = ""
-    score: int = 0
-
-
 GameID = str
 
 
@@ -25,9 +19,9 @@ class Game:
     def __init__(self, host_id: PlayerID):
         self.current_question_id = 0
         self.state: str | None = "LOBBY"
-        self.players: list[Player] = []
+        self.players: list[Event] = []
+        self.choices: dict[PlayerID, str] = dict()
         self.questions: list[McQuestion] = []
-        self.player_info: dict[PlayerID, PlayerInfo] = dict()
         self.time = 0
         self.p_count = 0
         self.host_id = host_id
@@ -36,30 +30,15 @@ class Game:
         out = f"Game[{self.state=}, {self.players=}]"
         return out
 
-    async def countdown(self, amount: int) -> None:
-        for i in range(amount, -1, -1):
-            await self.broadcast(f"COUNTDOWN[{i}]")
-            await sleep(1)
-
     async def game_loop(self):
         self.state = "PLAY"
-        await self.broadcast("GAMESTART")
-        await self.countdown(3)  # how long to wait before game start
-        # send first question
-        await self.broadcast_question()
+        await self.broadcast("COUNTDOWN")
+        await self.broadcast("QUESTION")
         while self.state != "FINISHED":
             await sleep(1)
             self.time += 1
-            answered = [
-                sum(
-                    [
-                        1 if len(pinfo.choice) else 0
-                        for pid, pinfo in self.player_info.items()
-                    ]
-                )
-            ]
 
-            if self.time >= 30 or answered == len(self.players):
+            if self.time >= 30 or len(self.choices.keys()) == len(self.players):
                 await self.next_question()
                 self.time = 0
 
@@ -69,28 +48,18 @@ class Game:
 
         self.players.append(player)
 
-        if player.socket:
-            copy = Player(**player.dict())
-            copy.socket = None
-            as_json = json.dumps(copy.dict())
-
-            await player.socket.send_text(as_json)
-
-    async def remove_player(self, player: Player):
-        self.players.remove(player)
-        if player.socket:
-            await player.socket.send_text("LEAVE")
+    # async def remove_player(self, player: Player):
+    #     self.players.remove(player)
+    #     if player.socket:
+    #         await player.socket.send_text("LEAVE")
+    #         await self.notify_host(json.dumps(player.dict()))
 
     async def add_player_choice(self, player_id, choice):
-        self.player_info[player_id].choice = choice
+        self.choices[player_id].choice = choice
 
     async def handle_end_game(self):
         self.state = "FINISHED"
         await self.broadcast("GAMEOVER")
-        host_socket = self.players[self.host_id].socket
-        assert host_socket is not None, "Error: lost player socket"
-        # self.players[self.host_id].socket.send_text(self.player_info)
-        await host_socket.send_text(str(self.player_info))
 
     async def next_question(self):
         self.check_answer()
@@ -99,26 +68,40 @@ class Game:
             await self.handle_end_game()
             return
 
-        for pid, _ in self.player_info.items():
-            self.player_info[pid].choice = ""
+        for pid in self.choices.keys():
+            self.choices[pid].choice = ""
 
-        await self.broadcast("NEXTQUESTION")
-        await self.countdown(2)
-        await self.broadcast_question()
+        await self.broadcast("COUNTDOWN")
+        await self.broadcast("QUESTION")
 
-    async def broadcast_question(self):
-        current_question = self.questions[self.current_question_id]
-        dto = McQuestionDTO(
-            question=current_question.question, choices=current_question.choices
-        )
-        await self.broadcast(json.dumps(dto.dict()))
-        print("ANSWER: ", current_question.answer)
-
-    async def broadcast(self, message: str):
+    async def broadcast(self, state: str):
         for player in self.players:
             try:
                 assert player.socket is not None, "Error: player socket is invalid"
-                await player.socket.send_text(message)
+                copy = Event(**player.dict())
+                copy.state = state
+                copy.player_count = len(self.players)
+                copy.choice = None
+
+                if state == "COUNTDOWN":
+                    for i in range(3, 0, -1):
+                        copy.countdown = i
+                        await player.socket.send_text(copy)
+                        await sleep(1)
+                    return
+                elif state == "QUESTION":
+                    copy.question = self.questions[self.current_question_id]
+                elif state == "GAMEOVER":
+                    copy.leaderboard = list(
+                        sorted(player, lambda x: x.score, reverse=True)
+                    )[:3]
+                elif state == "ANSWER":
+                    copy.answer = self.questions[self.current_question_id].answer
+                    copy.leaderboard = list(
+                        sorted(player, lambda x: x.score, reverse=True)
+                    )[:3]
+
+                await player.socket.send_text(copy)
             except:
                 print("Removing player: ", player)
                 self.players.remove(player)
@@ -128,13 +111,6 @@ class Game:
             player_choice = self.player_info[player_id].choice
             if player_choice == self.questions[self.current_question_id].answer:
                 self.player_info[player_id].score += kPOINTS
-
-        # for player_id in self.player_info.keys():
-        #     if (
-        #         self.player_info[player_id].choice
-        #         == self.questions[self.current_question_id].correct
-        #     ):
-        #         self.player_info[player].score += 1000
 
 
 """
