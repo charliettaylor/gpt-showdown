@@ -17,8 +17,9 @@
   }
 </script>
 
-<div>
+<div id="main" class="block">
   {#if state == "quizzes"}
+    <h1 class="block">Select a Quiz</h1>
     <Quizzes on:select_quiz={handleMessage} />
     <button class="button" on:click={() => (state = "create_quiz")}
       >Create New Quiz</button
@@ -31,3 +32,9 @@
     <Create on:quizzes={state_change} />
   {/if}
 </div>
+
+<style>
+  #main {
+    padding: 10%;
+  }
+</style>

@@ -51,7 +51,10 @@
   };
 </script>
 
-<div class="block">
+<div id="main" class="block">
+  <div class="section">
+    <h1>Create a Quiz</h1>
+  </div>
   <form class="form box">
     <div class="field">
       <label for="title" class="label">Title</label>
@@ -130,8 +133,10 @@
   <button class="button" on:click|preventDefault={create_quiz}
     >Create Quiz</button
   >
-  >
 </div>
 
 <style>
+  #main {
+    min-width: 50vw;
+  }
 </style>

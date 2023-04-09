@@ -142,9 +142,13 @@
   {/if}
 
   {#if game.question && !game.choice}
-    {#each game.question.choices as choice}
-      <button on:click={() => answer(choice.choice)}>{choice.value}</button>
-    {/each}
+    <div id="answer_choices">
+      {#each game.question.choices as choice}
+        <div class="choice">
+          <button on:click={() => answer(choice.choice)}>{choice.value}</button>
+        </div>
+      {/each}
+    </div>
   {/if}
 
   {#if game.answer}
@@ -162,6 +166,26 @@
 </div>
 
 <style>
+  #answer_choices {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  #answer_choices > div {
+    flex: 50%;
+    margin-bottom: 10px;
+  }
+
+  .choice {
+    width: 100%;
+  }
+
+  .choice > button {
+    width: 20vw;
+    padding: 50px;
+    height: 100%;
+  }
+
   footer {
     position: absolute;
     left: 0;

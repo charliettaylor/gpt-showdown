@@ -17,16 +17,29 @@
     const res = await fetch("http://localhost:8000/api/get_quizzes");
     quizzes = await res.json();
   });
+
+  let search;
 </script>
 
 <div class="block">
-  <div class="field search">
-    <label for="search">Filter</label>
-    <input class="input" name="search" type="text" />
+  <div class="field search block">
+    <label for="search">Search</label>
+    <input bind:value={search} class="input" name="search" type="text" />
   </div>
-  <div class="block">
+  <div id="quizzes" class="section">
     {#each quizzes as quiz}
-      <Quiz on:select_quiz={() => select_quiz(quiz)} {quiz} />
+      {#if !search || quiz.name.includes(search)}
+        <Quiz on:select_quiz={() => select_quiz(quiz)} {quiz} />
+      {/if}
     {/each}
   </div>
 </div>
+
+<style>
+  #quizzes {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+</style>
