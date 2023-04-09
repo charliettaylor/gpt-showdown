@@ -1,4 +1,20 @@
 from collections import defaultdict
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from assistant import Assistant
+from fastapi.middleware.cors import CORSMiddleware
+
+from collections import defaultdict
+
+
+from db import (
+    create_schema,
+    insert_quiz,
+    insert_question,
+    insert_choice,
+)
+
+from schema import CreateQuiz, CreateQuestion, CreateChoice
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -7,8 +23,6 @@ from pydantic import BaseModel
 from assistant import Assistant
 from db import (
     create_schema,
-    get_choice_by_id,
-    get_question_by_id,
     insert_choice,
     insert_question,
 )
@@ -43,34 +57,26 @@ async def root():
     return {"message": "gpt showdown :)"}
 
 
-@app.get("/api/question/{id}")
-async def get_question(id: int):
-    return get_question_by_id(id)
+# Create a new gpt instance per game id
+GameID = str
+gpt_instances: defaultdict[GameID, Assistant] = defaultdict(lambda: Assistant())
+
+active_games = set(["AAA"])
 
 
-@app.get("/api/choice/{id}")
-async def get_choice(id: int):
-    return get_choice_by_id(id)
+@app.post("/api/quiz")
+async def create_quiz(quiz: CreateQuiz):
+    quiz_id = insert_quiz(quiz.name)
 
-
-@app.post("/api/question")
-async def post_question(question: str, answer: str):
-    q = insert_question(question, answer)
-
-    if q:
-        return {"message": "question added"}
-
-    raise HTTPException(status_code=400, detail="Failed to add question")
-
-
-@app.post("/api/choice")
-async def post_choice(question_id: int, choice: str):
-    c = insert_choice(question_id, choice)
-
-    if c:
-        return {"message": f"choice added to quesion {question_id}"}
-
-    raise HTTPException(status_code=400, detail="Failed to add choice")
+    if quiz_id is None:
+        raise HTTPException(status_code=400, detail="Quiz not created")
+    print("penis", quiz_id)
+    for question in quiz.questions:
+        id = insert_question(quiz_id, question)
+        for choice in question.choices:
+            insert_choice(id, choice)
+    
+    return {"message": "Quiz created"}
 
 
 async def get_gpt_response(game_id: GameID, question_id: str):
