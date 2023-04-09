@@ -25,6 +25,7 @@ Answer: D) Velumani
     B) Gnome Networking Utility
     C) GNU's Not Unix
     D) Generic Network Utility
+Answer: C) GNU's Not Unix
 
 5. What is 18 % 4?
     A) 14
