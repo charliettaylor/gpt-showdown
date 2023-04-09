@@ -17,7 +17,7 @@ class Assistant:
             dat = inp.read()
         return dat
 
-    def write_message(self, role: str, content: str) -> None:
+    def write_message(self, role: str, content: str) -> str:
         to_write = {"role": role, "content": content}
         self.messages.append(to_write)
         api_response = self.get_api_response()
