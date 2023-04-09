@@ -185,7 +185,6 @@
     grid-template-columns: 1fr 1fr;
     place-items: center;
     padding: 0;
-    background-color: red;
     width: 75vw;
   }
 
