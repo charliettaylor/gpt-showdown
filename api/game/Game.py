@@ -82,8 +82,8 @@ class Game:
         for player in self.players:
             try:
                 assert player.socket is not None, "Error: player socket is invalid"
-                copy.socket = None
                 copy = Event(**player.dict())
+                copy.socket = None
                 copy.state = state
                 copy.player_count = len(self.players)
                 copy.choice = None
@@ -91,7 +91,7 @@ class Game:
                 if state == "COUNTDOWN":
                     for i in range(3, 0, -1):
                         copy.countdown = i
-                        await player.socket.send_text(copy)
+                        await player.socket.send_text(json.dumps(copy.dict()))
                         await sleep(1)
                     return
                 elif state == "QUESTION":
