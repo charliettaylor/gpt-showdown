@@ -146,7 +146,7 @@
   {#if game.question && !game.choice}
     <div id="answer_choices">
       {#each game.question.choices as choice, i}
-        <div class="choice">
+        <div class="choice {colors[i]}">
           <button class={colors[i]} on:click={() => answer(choice.choice)}
             >{choice.value}</button
           >

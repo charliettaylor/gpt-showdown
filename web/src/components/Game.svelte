@@ -5,6 +5,9 @@
   let ws;
   let time;
 
+  let colors = ["red", "blue", "yellow", "green"];
+
+
   const start_game = () => {
     game.action = "START";
     ws.send(JSON.stringify(game));
@@ -62,8 +65,8 @@
     <div id="time">{time}</div>
     <h1>{game.question.text}</h1>
     <div id="answer_choices">
-      {#each game.question.choices as choice}
-        <div class="choice"><div>{choice.value}</div></div>
+      {#each game.question.choices as choice, i}
+        <div class="choice"><div class={colors[i]}>{choice.value}</div></div>
       {/each}
     </div>
   {/if}
@@ -97,6 +100,7 @@
 </div>
 
 <style>
+
   #answer_choices {
     display: flex;
     justify-content: space-between;
