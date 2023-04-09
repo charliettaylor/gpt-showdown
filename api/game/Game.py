@@ -32,13 +32,13 @@ class Game:
 
     async def game_loop(self):
         self.state = "PLAY"
-        await self.broadcast("COUNTDOWN")
+        await self.broadcast("COUNTDOWN", 3)
         await self.broadcast("QUESTION")
         while self.state != "FINISHED":
             await sleep(1)
             self.time += 1
 
-            if self.time >= 30 or len(self.choices.keys()) == len(self.players):
+            if self.time >= 30 or len(self.choices.keys()) == len(self.players) - 1:
                 await self.next_question()
                 self.time = 0
 
@@ -75,10 +75,10 @@ class Game:
         for pid in self.choices.keys():
             self.choices[pid].choice = ""
 
-        await self.broadcast("COUNTDOWN")
+        await self.broadcast("COUNTDOWN", 3)
         await self.broadcast("QUESTION")
 
-    async def broadcast(self, state: str):
+    async def broadcast(self, state: str, countdown: int = None):
         for player in self.players:
             try:
                 assert player.socket is not None, "Error: player socket is invalid"
@@ -89,10 +89,8 @@ class Game:
                 copy.choice = None
 
                 if state == "COUNTDOWN":
-                    for i in range(3, 0, -1):
-                        copy.countdown = i
-                        await player.socket.send_text(json.dumps(copy.dict()))
-                        await sleep(1)
+                    copy.countdown = countdown
+                    await player.socket.send_text(json.dumps(copy.dict()))
                     continue
                 elif state == "QUESTION":
                     x = self.questions[self.current_question_id]
@@ -112,6 +110,9 @@ class Game:
                 print("Error: ", e)
                 print("Removing player: ", player)
                 self.players.remove(player)
+        if countdown >= 0:
+            await sleep(1)
+            await self.broadcast(state, countdown - 1)
 
     def check_answer(self):
         for player_id in self.choices.keys():
