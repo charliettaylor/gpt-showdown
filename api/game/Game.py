@@ -67,6 +67,7 @@ class Game:
 
     async def next_question(self):
         self.check_answer()
+        self.broadcast("ANSWER")
         self.current_question_id += 1
         if self.current_question_id >= len(self.questions):
             await self.handle_end_game()
@@ -103,7 +104,7 @@ class Game:
                     copy.answer = self.questions[self.current_question_id].answer
                     copy.leaderboard = list(
                         sorted(player, lambda x: x.score, reverse=True)
-                    )[:3]
+                    )[:min(3, len(self.players))]
 
                 await player.socket.send_text(json.dumps(copy.dict()))
             except Exception as e:
