@@ -70,7 +70,7 @@ class Game:
         self.players.append(player)
 
         if player.socket:
-            copy = Player(**player)
+            copy = Player(**player.dict())
             copy.socket = None
             as_json = str(copy.dict())
 
