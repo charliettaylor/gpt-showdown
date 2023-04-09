@@ -95,36 +95,3 @@ async def websocket_endpoint(websocket: WebSocket):
         await man.dispatch(event=event)
 
     # handle leave
-
-
-# TODO: move this to different file
-async def get_gpt_response(game_id: GameID, question_id: str):
-    """
-    Query database and ask GPT what it thinks the answer is.
-    """
-    # ensure active game
-    if game_id not in active_games:
-        return {"message": "Game not active."}
-
-    # TODO: query db for question text
-    totally_real_db_query = (
-        lambda *, qid: "What is 2+2?\nChoices: A: 4 B: 6 C:9 D:0"
-    )  # pyright: ignore
-
-    totallY_real_db_query_two = lambda *, qid: "A"
-
-    question_text = totally_real_db_query(qid=question_id)
-    actual_answer = totallY_real_db_query_two(qid=question_id)
-
-    gpt = gpt_instances[game_id]
-    initial_gpt_response = gpt.write_message(role="user", content=question_text)
-    parsed_gpt_response = parse_gpt(
-        initial_gpt_response
-    )  # to the form "A" or "B" or "C" or "D"
-
-    return {
-        "message": "GPT successfuly answered.",
-        "gpt_response": parsed_gpt_response,
-        "initial_gpt_response": initial_gpt_response,
-        "question_text": question_text,
-    }

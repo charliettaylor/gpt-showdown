@@ -1,7 +1,10 @@
+from ..assistant import Assistant
 from .models import Player, PlayerID, Event
 from ..schema import McQuestionDTO, Question, McQuestion
-from asyncio import sleep
+from asyncio import sleep, run
+from ..db import get_questions_by_quiz  # HACK: for debugging GPT integration
 from dataclasses import dataclass
+from ..parse_gpt import parse_gpt
 import json
 
 """
@@ -16,7 +19,7 @@ GameID = str
 
 
 class Game:
-    def __init__(self, host_id: PlayerID):
+    def __init__(self, host_id: PlayerID):  # HACK: don't need host_id here... always 0
         self.current_question_id = 0
         self.state: str | None = "LOBBY"
         self.players: list[Event] = []
@@ -25,6 +28,7 @@ class Game:
         self.time = 0
         self.p_count = 0
         self.host_id = host_id
+        self.gpt = Assistant()
 
     def __repr__(self):
         out = f"Game[{self.state=}, {self.players=}]"
@@ -101,16 +105,17 @@ class Game:
                     x = self.questions[self.current_question_id]
                     copy.question = McQuestionDTO(text=x.question, choices=x.choices)
                 elif state == "GAMEOVER":
-                    copy.leaderboard = [{'nickname': x.nickname, 'score': x.score} for x in list(
-                        sorted(self.players, key = lambda x: x.score, reverse=True)
-                    )[:min(3, len(self.players))]]
+                    copy.leaderboard = [
+                        {"nickname": x.nickname, "score": x.score}
+                        for x in list(
+                            sorted(self.players, key=lambda x: x.score, reverse=True)
+                        )[: min(3, len(self.players))]
+                    ]
                 elif state == "ANSWER":
                     copy.answer = self.questions[self.current_question_id].answer
                     copy.leaderboard = list(
-                        sorted(self.players, key = lambda x: x.score, reverse=True)
-                    )[:min(3, len(self.players))]
-
-                print("balls, bigger balls", copy.dict())
+                        sorted(self.players, key=lambda x: x.score, reverse=True)
+                    )[: min(3, len(self.players))]
                 await player.socket.send_text(json.dumps(copy.dict()))
             except Exception as e:
                 print("Error: ", e)
@@ -125,6 +130,42 @@ class Game:
             if choice == self.questions[self.current_question_id].answer:
                 self.players[player_id].score += kPOINTS
 
+    # TODO: move this to different file
+
+    async def get_gpt_response(self):
+        """
+        Query database and ask GPT what it thinks the answer is.
+        """
+        questions = get_questions_by_quiz(1)
+
+        current_question = questions[self.current_question_id]
+        dto = McQuestionDTO(
+            text=current_question.question, choices=current_question.choices
+        )
+
+        formatted_for_gpt = dto.text
+        for choice in dto.choices:
+            if choice.value == "None":
+                continue
+            formatted_for_gpt += f"\n{choice.choice}: {choice.value}"
+
+        initial_gpt_response = self.gpt.write_message(
+            role="user", content=formatted_for_gpt
+        )
+        parsed_gpt_response = parse_gpt(
+            initial_gpt_response
+        )  # to the form "A" or "B" or "C" or "D"
+
+        debug = {
+            "message": "GPT successfuly answered.",
+            "gpt_response": parsed_gpt_response,
+            "initial_gpt_response": initial_gpt_response,
+            "question_text": formatted_for_gpt,
+        }
+
+        print("GPT-DEBUG ", debug)
+        return parsed_gpt_response
+
 
 """
 on...
@@ -132,3 +173,7 @@ on...
 join -> send nickname, game_id
 leave -> send nickname, game_id
 """
+
+if __name__ == "__main__":
+    g = Game(host_id=0)
+    run(g.get_gpt_response())

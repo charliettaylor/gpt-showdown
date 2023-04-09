@@ -13,7 +13,7 @@ class Assistant:
 
     def fetch_prompt(self):
         dat = None
-        with open("prompt.in", "r") as inp:
+        with open("api/prompt.in", "r") as inp:
             dat = inp.read()
         return dat
 

@@ -86,7 +86,6 @@ def get_questions_by_quiz(quiz_id: int) -> list[McQuestion]:
             )
         )
 
-    print("penis", things, type(things))
     return things
 
 
