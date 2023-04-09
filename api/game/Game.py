@@ -93,7 +93,7 @@ class Game:
                         copy.countdown = i
                         await player.socket.send_text(json.dumps(copy.dict()))
                         await sleep(1)
-                    return
+                    continue
                 elif state == "QUESTION":
                     x = self.questions[self.current_question_id]
                     copy.question = McQuestionDTO(text=x.question, choices=x.choices)
