@@ -1,5 +1,5 @@
-from .models import Player, Event
-from ..schema import Question
+from .models import Player, Event, PlayerID
+from api.schema import Question
 from time import sleep
 
 """
@@ -10,7 +10,7 @@ GameID = str
 
 
 class Game:
-    def __init__(self, host_id):
+    def __init__(self, host_id: PlayerID):
         self.current_question_id = 0
         self.state: str | None = "LOBBY"
         self.players: list[Player] = []
@@ -23,41 +23,46 @@ class Game:
         out = f"Game[{self.state=}, {self.players=}]"
         return out
 
-    def game_loop(self):
+    async def game_loop(self):
+        self.state = "PLAY"
         while self.state != "FINISHED":
             sleep(1)
             self.time += 1
             if self.time == 30 or len(self.current_choices) == len(self.players):
-                self.next_question()
+                await self.next_question()
                 self.time = 0
 
-    def add_player(self, player: Player):
+    async def add_player(self, player: Player):
         player.player_id = self.p_count
         self.p_count += 1
 
         self.players.append(player)
-        player._socket.send_text(player)
+        if player._socket:
+            await player._socket.send_text(player)
 
-    def remove_player(self, player: Player):
+    async def remove_player(self, player: Player):
         self.players.remove(player)
-        player._socket.send_text("LEAVE")
+        if player._socket:
+            await player._socket.send_text("LEAVE")
 
-    def add_player_choice(self, player_id, choice):
+    async def add_player_choice(self, player_id, choice):
         self.current_choices[player_id] = choice
 
-    def next_question(self):
+    async def next_question(self):
         self.current_question_id += 1
         if self.current_question_id >= len(self.questions):
             self.state = "FINISHED"
-            self.broadcast("GAMEOVER")
+            await self.broadcast("GAMEOVER")
             return
 
         self.current_choices = dict()
-        self.broadcast("NEXTQUESTION")
+        await self.broadcast("NEXTQUESTION")
 
-    def broadcast(self, message: str):
+    async def broadcast(self, message: str):
         for player in self.players:
-            player._socket.send_text(message)
+            if player._socket is None:
+                continue  # HACK: for dev
+            await player._socket.send_text(message)
 
 
 """

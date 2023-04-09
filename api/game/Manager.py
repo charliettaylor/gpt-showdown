@@ -1,9 +1,12 @@
 from collections import defaultdict
 from .Game import Game, GameID
-from .models import Event
+from .models import Event, PlayerID
 from random import choice
 from string import ascii_uppercase
 from threading import Thread
+import logging
+import sys
+
 
 """
 Manager holds all activate game instances.
@@ -11,6 +14,7 @@ Manager holds all activate game instances.
 Uses a Singleton design pattern.
 """
 
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 class Manager:
     __instance = None
@@ -28,7 +32,7 @@ class Manager:
         if Manager.__instance is not None:
             raise Exception("This class is a singleton!")
 
-        self.hosts = dict[str, Game] = dict()
+        self.hosts: dict[PlayerID, Game] = dict()
         self.games: dict[GameID, Game] = dict()
         Manager.__instance = self
 
@@ -39,13 +43,14 @@ class Manager:
 
         return random_id  # [A-Z]{3}
 
-    def create_game(self, host_id):
+    def create_game(self, host_id: int):
         game_id = self.generate_game_id()
-        game = Game()
+        game = Game(host_id)
         self.games[game_id] = game
         self.hosts[host_id] = game_id
 
-    def dispatch(self, event: Event):
+    async def dispatch(self, event: Event):
+        print(event)
         if event.action == "CREATE":
             # player needs id
             event.player_id = 0
@@ -55,16 +60,19 @@ class Manager:
             event.game_id = self.hosts[event.player_id]
 
             game = self.games[event.game_id]
-            game.add_player(event)
+            await game.add_player(event)
+            return
+
+        if event.game_id not in self.games.keys():
+            return
 
         game = self.games[event.game_id]
         if event.action == "JOIN":
-            game.add_player(event)
+            await game.add_player(event)
         elif event.action == "SUBMIT":
-            game.add_player_choice(event)
+            await game.add_player_choice(event)
         elif event.action == "LEAVE":
-            game.remove_player(event)
-
+            await game.remove_player(event)
 
         # admin only stuff
         if (
@@ -72,9 +80,9 @@ class Manager:
             or self.hosts[event.player_id] != event.game_id
         ):
             return
-            
-        if event.player_id == "START":
-            Thread(game.game_loop())
+
+        if event.action == "START":
+            Thread(await game.game_loop())
 
 
 if __name__ == "__main__":

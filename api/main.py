@@ -59,7 +59,7 @@ async def websocket_endpoint(websocket: WebSocket):
     while True:
         data = await websocket.receive_text()
 
-        man.dispatch(event=Event(socket=websocket, **data))
+        await man.dispatch(event=Event(socket=websocket, **data))
 
 
 # TODO: move this to different file
