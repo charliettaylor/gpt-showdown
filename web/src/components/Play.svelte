@@ -200,7 +200,7 @@
 
   @media (max-width: 850px) {
     #answer_choices {
-      background-color: yellow;
+      /* background-color: yellow; */
       display: flex;
       flex-direction: column;
     }
@@ -236,6 +236,22 @@
     position: absolute;
     top: 0%;
     left: 0%;
+  }
+
+  .blue {
+    background-color: #78a1ff;
+  }
+
+  .red {
+    background-color: #ff4949;
+  }
+
+  .yellow {
+    background-color: #ffff33;
+  }
+
+  .green {
+    background-color: #57ff84;
   }
 
   #main {
