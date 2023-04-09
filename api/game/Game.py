@@ -67,7 +67,8 @@ class Game:
 
     async def next_question(self):
         self.check_answer()
-        self.broadcast("ANSWER")
+        await self.broadcast("ANSWER")
+        await sleep(3)
         self.current_question_id += 1
         if self.current_question_id >= len(self.questions):
             await self.handle_end_game()
@@ -99,7 +100,7 @@ class Game:
                 elif state == "GAMEOVER":
                     copy.leaderboard = list(
                         sorted(player, lambda x: x.score, reverse=True)
-                    )[:3]
+                    )[:min(3, len(self.players))]
                 elif state == "ANSWER":
                     copy.answer = self.questions[self.current_question_id].answer
                     copy.leaderboard = list(
