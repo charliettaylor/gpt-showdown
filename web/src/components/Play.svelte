@@ -121,9 +121,6 @@
         </form>
       {/if}
     </div>
-    <footer>
-      <small>Create a quiz <a href="/host">here!</a></small>
-    </footer>
   {/if}
   {#if error.length > 0}
     <h1>{error}</h1>

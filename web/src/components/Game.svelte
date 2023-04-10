@@ -7,7 +7,6 @@
 
   let colors = ["red", "blue", "yellow", "green"];
 
-
   const start_game = () => {
     game.action = "START";
     ws.send(JSON.stringify(game));
@@ -65,10 +64,10 @@
 
   {#if game.question}
     <div id="time">{time}</div>
-    <h1>{game.question.text}</h1>
+    <h1 style="margin-botton: 1em;">{game.question.text}</h1>
     <div id="answer_choices">
       {#each game.question.choices as choice, i}
-        <div class="choice"><div class={colors[i]}>{choice.value}</div></div>
+        <div id={colors[i]} class="choice">{choice.value}</div>
       {/each}
     </div>
   {/if}
@@ -97,16 +96,31 @@
   {/if}
 
   {#if game.state == "GAMEOVER"}
-    <h1>Game Over!</h1>
+    <h2>Game Over!</h2>
+    <div class="block">
+      <h2>Leaderboard</h2>
+    </div>
+    <table class="table">
+      <tbody class="tbody">
+        {#each game.leaderboard as player}
+          {#if player.nickname != "host"}
+            <tr>
+              <td>{player.nickname}</td>
+              <td>{player.score}</td>
+            </tr>
+          {/if}
+        {/each}
+      </tbody>
+    </table>
   {/if}
 </div>
 
 <style>
-
   #answer_choices {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
+    transform: translateX(1%);
   }
 
   #answer_choices > div {
@@ -118,10 +132,9 @@
     width: 100%;
   }
 
-  .choice > div {
+  .choice {
     border: 4px solid black;
     border-radius: 10px;
-    background-color: white;
     padding: 10px;
     width: 20vw;
     padding: 50px;
@@ -174,5 +187,36 @@
     font-size: min(20vw, 8rem);
     animation: 5s float ease-in-out infinite;
     text-shadow: #ccc 3px 5px 2px;
+  }
+
+  .blue {
+    background-color: #78a1ff;
+  }
+
+  .red {
+    background-color: #ff4949;
+  }
+
+  .yellow {
+    background-color: #ffff33;
+  }
+
+  .green {
+    background-color: #57ff84;
+  }
+  #blue {
+    background-color: #78a1ff;
+  }
+
+  #red {
+    background-color: #ff4949;
+  }
+
+  #yellow {
+    background-color: #ffff33;
+  }
+
+  #green {
+    background-color: #57ff84;
   }
 </style>

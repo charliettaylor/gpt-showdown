@@ -94,7 +94,7 @@ class Manager:
 
         print("EVENT: ", event)
 
-        if event.action == "JOIN":
+        if event.action == "JOIN" and game.state == "LOBBY":
             await game.add_player(event)
         elif event.action == "SUBMIT":
             print("HERE IN SUBMIT")

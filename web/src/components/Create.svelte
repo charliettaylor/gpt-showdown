@@ -34,6 +34,7 @@
   };
 
   const create_quiz = () => {
+    const url = "https://gptquiz.xyz/api/quiz";
     fetch(url, {
       method: "POST",
       headers: {
