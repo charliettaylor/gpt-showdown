@@ -32,7 +32,7 @@ def insert_quizzes():
     # print(choices)
     # print(answers)
     # print(len(answers))
-    # print(actual_choices)
+    print(actual_choices)
     # print(len(questions), " ", (len(actual_choices)))
 
     for cidx, category in enumerate(categories):
@@ -53,7 +53,7 @@ def insert_quizzes():
         for i, _question in enumerate(questions_for_category):
             new_question = CreateQuestion(
                 question=_question,
-                answer=answers[i][0],
+                answer=answer_for_questions[i][0],
                 choices=choices_for_question[i],
             )
             questions_list.append(new_question)
