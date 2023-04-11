@@ -30,25 +30,22 @@ def insert_quizzes():
 
     quizzes = []
     # print(choices)
-    # print(answers)
     # print(len(answers))
-    print(actual_choices)
+    # print(actual_choices)
     # print(len(questions), " ", (len(actual_choices)))
 
     for cidx, category in enumerate(categories):
         quiz_name = category.lower() + "-1"
         questions_for_category = category_to_questions[category]
-        answer_for_questions = [
-            answers[i][0] for i in range(len(questions_for_category))
-        ]
-        choices_for_question = [
-            actual_choices[i * 4 : i * 4 + 4]
-            for i in range(len(questions_for_category))
-        ]
 
-        # print(
-        #     f"{questions_for_category=}, {answer_for_questions=}, {choices_for_question}\n"
-        # )
+        answer_for_questions = []
+        choices_for_question = []
+        for _question in questions_for_category:
+            choices_for_question.append(list())
+            for _ in range(4):  # pop for choices per question
+                choices_for_question[-1].append(actual_choices.pop(0))
+            answer_for_questions.append(answers.pop(0))
+
         questions_list = []
         for i, _question in enumerate(questions_for_category):
             new_question = CreateQuestion(
