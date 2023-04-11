@@ -1,0 +1,12 @@
+[Unit]
+Description=Svelte Web App for GPTQuiz.xyz (FullyHacks '23)
+[Install]
+WantedBy=multi-user.target
+[Service]
+Type=simple
+User=ubuntu
+PermissionsStartOnly=true
+WorkingDirectory=/home/ubuntu/repos/gpt-showdown/web
+ExecStart=npm run preview
+Restart=on-failure
+TimeoutSec=600
