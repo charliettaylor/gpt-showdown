@@ -92,7 +92,7 @@ class Game:
     async def next_question(self):
         self.check_answer()
         await self.broadcast("ANSWER")
-        await sleep(3)
+        await sleep(5)
         self.current_question_id += 1
         if self.current_question_id >= len(self.questions):
             await self.handle_end_game()
@@ -100,7 +100,7 @@ class Game:
 
         self.choices.clear()
 
-        await self.broadcast("COUNTDOWN", 5)
+        await self.broadcast("COUNTDOWN", 3)
         await self.broadcast("QUESTION")
 
     async def broadcast(self, state: str, countdown: int = None):
