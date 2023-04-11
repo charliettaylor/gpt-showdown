@@ -100,7 +100,7 @@ class Game:
 
         self.choices.clear()
 
-        await self.broadcast("COUNTDOWN", 3)
+        await self.broadcast("COUNTDOWN", 5)
         await self.broadcast("QUESTION")
 
     async def broadcast(self, state: str, countdown: int = None):
