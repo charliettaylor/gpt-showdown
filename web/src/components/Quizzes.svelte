@@ -15,6 +15,7 @@
 
   onMount(async () => {
     const url = "https://gptquiz.xyz/api/get_quizzes";
+    // const url = "http://localhost:5005/get_quizzes";
     const res = await fetch(url);
     quizzes = await res.json();
   });

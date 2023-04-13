@@ -56,7 +56,15 @@ def insert_choice(question_id: int, c: CreateChoice) -> int | None:
 
 def get_all_quizzes():
     cur = con.cursor()
-    cur.execute("SELECT * FROM QUIZZES")
+    # cur.execute("SELECT * FROM QUIZZES")
+    cur.execute(
+        """
+    SELECT quizzes.id, quizzes.name, quizzes.category, COUNT(questions.id) AS num_questions
+    FROM quizzes
+    LEFT JOIN questions ON quizzes.id = questions.quiz_id
+    GROUP BY quizzes.id, quizzes.name, quizzes.category;
+    """
+    )
     rows = cur.fetchall()
     return rows
 
@@ -73,7 +81,7 @@ def get_questions_by_quiz(quiz_id: int) -> list[McQuestion]:
 
     cur = con.cursor()
 
-    cur.execute("SELECT * FROM questions WHERE quiz_id = ?", (str(quiz_id)))
+    cur.execute("SELECT * FROM questions WHERE quiz_id = ?", (str(quiz_id),))
     rows = cur.fetchall()
 
     for row in rows:

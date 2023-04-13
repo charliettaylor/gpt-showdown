@@ -12,9 +12,9 @@ async def parse_gpt(gpt_response: str):
     """
     Parse long-winded GPT responses to single capitalized letters.
     """
-    if "True" in gpt_response:
+    if "True" in gpt_response or "true" in gpt_response:
         return "A"
-    if "False" in gpt_response:
+    if "False" in gpt_response or "false" in gpt_response:
         return "B"
 
     ans = findall(kPATTERN, gpt_response)  # needle, haystack

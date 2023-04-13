@@ -18,12 +18,14 @@
 </script>
 
 <div id="main" class="block">
+  <footer><a href="/">Go Back Home</a></footer>
   {#if state == "quizzes"}
     <h1 class="block">Select a Quiz</h1>
-    <Quizzes on:select_quiz={handleMessage} />
+    <h4>or</h4>
     <button class="button" on:click={() => (state = "create_quiz")}
-      >Create New Quiz</button
+      >Create a Quiz</button
     >
+    <Quizzes on:select_quiz={handleMessage} />
   {/if}
   {#if state == "host_game"}
     <Game {quiz} />
@@ -35,6 +37,33 @@
 
 <style>
   #main {
-    padding: 10%;
+    padding: 5vw;
+    /* min-width: 50vw; */
+    max-width: 70vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .block {
+    margin-bottom: 0;
+  }
+
+  .button {
+    margin-bottom: 2vh;
+    border: 2px solid #333;
+    transition: all 0.1s;
+  }
+
+  .button:hover {
+    transform: scale(1.02);
+  }
+
+  footer {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
   }
 </style>

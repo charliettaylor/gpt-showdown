@@ -27,6 +27,7 @@
     }, 1000);
 
     const url = "wss://gptquiz.xyz/ws";
+    // const url = "ws://localhost:5005/ws";
     ws = new WebSocket(url);
 
     ws.addEventListener("message", (e) => {
@@ -52,10 +53,10 @@
         {game.game_id}
       </h1>
     </div>
-    <div class="block" id="players">{game.player_count} Players</div>
+    <div class="block" id="players">{game.player_count - 1} Players</div>
     <div class="block">
       <button class="green" on:click={start_game}>Start Game</button>
-      <h1>GPTQuiz.xyz</h1>
+      <h1 style="margin-top: 19vh;">GPTQuiz.xyz</h1>
     </div>
   {/if}
 
@@ -179,6 +180,12 @@
     position: relative;
     font-size: 2em;
     transform: translateX(-50%) rotate(-15deg);
+  }
+
+  @media (max-width: 850px) {
+    #splash {
+      transform: translateX(-22%) rotate(-15deg);
+    }
   }
 
   #game_code {

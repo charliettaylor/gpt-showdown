@@ -40,6 +40,7 @@
     entered_code = false;
     game.state = "NOT_CREATED";
     error = "";
+    window.location.reload();
   };
 
   let ws_open = false;
@@ -47,6 +48,7 @@
 
   onMount(() => {
     const url = "wss://gptquiz.xyz/ws";
+    // const url = "ws://localhost:5005/ws";
     ws = new WebSocket(url);
 
     ws.addEventListener("open", (event) => {
@@ -82,7 +84,7 @@
       <Shape shape="diamond" />
       <Shape shape="square" />
       <div class="block">
-        <h1>GPT Showdown</h1>
+        <h1>GPT Quiz</h1>
       </div>
       {#if entered_code && ws_open}
         <form class="block">
@@ -111,14 +113,29 @@
                 id="code_input"
                 name="code"
                 class="input"
-                type="number"
+                type="text"
+                pattern="\d*"
                 autocomplete="off"
+                maxlength="4"
                 bind:value={game.game_id}
               />
             </div>
           </div>
           <button on:click|preventDefault={handleCodeInput}>Join</button>
         </form>
+        <footer>
+          <div class="footer-container">
+            <div class="footer-element">
+              <small>Made by Team WebSockets for FullyHacks '23</small>
+            </div>
+            <div class="footer-element footer-center">
+              <a href="/host">Create a Quiz</a>
+            </div>
+            <div class="footer-element">
+              <small />
+            </div>
+          </div>
+        </footer>
       {/if}
     </div>
   {/if}
@@ -158,23 +175,6 @@
       {game.answer}
     </h1>
   {/if}
-
-  <!-- <div id="answer_choices"> -->
-  <!--   <div class="choice"> -->
-  <!--     <button>A</button> -->
-  <!--   </div> -->
-  <!--   <div class="choice"> -->
-  <!--     <button>A</button> -->
-  <!--   </div> -->
-
-  <!--   <div class="choice"> -->
-  <!--     <button>A</button> -->
-  <!--   </div> -->
-
-  <!--   <div class="choice"> -->
-  <!--     <button>A</button> -->
-  <!--   </div> -->
-  <!-- </div> -->
 </div>
 
 <style>
@@ -216,10 +216,30 @@
 
   footer {
     position: absolute;
-    left: 0;
     bottom: 0;
+    left: 0;
+    width: 100vw;
+  }
+
+  small {
+    font-size: 0.6em;
+  }
+
+  .footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
-    padding: 0.01rem;
+    margin: 0 auto;
+  }
+
+  .footer-element {
+    flex: 1;
+    text-align: center;
+  }
+
+  .footer-center {
+    text-align: center;
   }
 
   button {
@@ -251,8 +271,15 @@
     background-color: #57ff84;
   }
 
+  @media (max-width: 850px) {
+    #main {
+      margin-top: 15vh;
+    }
+  }
+
   #main {
     top: 0;
     min-height: 90vh;
+    min-width: 25vw;
   }
 </style>

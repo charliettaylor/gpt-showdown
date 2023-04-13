@@ -14,6 +14,7 @@ from .db import (
     insert_quiz,
     get_all_quizzes,
     get_all_quiz_categories,
+    get_questions_by_quiz,
 )
 from .parse_gpt import parse_gpt
 from .schema import CreateQuiz
@@ -65,6 +66,11 @@ async def create_quiz(quiz: CreateQuiz):
 @app.get("/get_quizzes")
 async def get_quizzes():
     return get_all_quizzes()
+
+
+@app.get("/get_questions")
+async def get_questions(quiz_id: int):
+    return get_questions_by_quiz(quiz_id)
 
 
 @app.get("/get_quiz_categories")
