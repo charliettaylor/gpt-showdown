@@ -97,7 +97,6 @@ class Manager:
         if event.action == "JOIN" and game.state == "LOBBY":
             await game.add_player(event)
         elif event.action == "SUBMIT":
-            print("HERE IN SUBMIT")
             await game.add_player_choice(event.player_id, event.choice)
         elif event.action == "LEAVE":
             await game.remove_player(event)

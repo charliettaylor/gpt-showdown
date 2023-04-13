@@ -16,6 +16,8 @@ Each game instance contains currently connected players.
 kPOINTS = 1_000
 kGPT_ID = 1337
 
+kDISALLOWED_NAMES = ["GPT", "host"]
+
 
 GameID = str
 
@@ -64,6 +66,13 @@ class Game:
     async def add_player(self, player: Player):
         player.player_id = self.p_count
         self.p_count += 1
+        used_nicknames = [p.nickname for p in self.players]
+        if (
+            player.player_id > 0
+            and player.nickname in kDISALLOWED_NAMES
+            or player.nickname in used_nicknames
+        ):
+            player.nickname = f"{player.nickname}(1)"
 
         self.players.append(player)
         await self.broadcast("LOBBY")
