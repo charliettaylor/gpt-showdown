@@ -6,6 +6,7 @@
   let time;
 
   let colors = ["red", "blue", "yellow", "green"];
+  let medals = "🥇🥈🥉" + " ".repeat(999);
 
   const start_game = () => {
     game.action = "START";
@@ -84,10 +85,10 @@
       </div>
       <table class="table">
         <tbody class="tbody">
-          {#each game.leaderboard as player}
+          {#each game.leaderboard as player, i}
             {#if player.nickname != "host"}
               <tr>
-                <td>{player.nickname}</td>
+                <td>{medals[i % medals.length]}{player.nickname}</td>
                 <td>{player.score}</td>
               </tr>
             {/if}
@@ -104,10 +105,10 @@
     </div>
     <table class="table">
       <tbody class="tbody">
-        {#each game.leaderboard as player}
+        {#each game.leaderboard as player, i}
           {#if player.nickname != "host"}
             <tr>
-              <td>{player.nickname}</td>
+              <td>{medals[i % medals.length]}{player.nickname}</td>
               <td>{player.score}</td>
             </tr>
           {/if}
