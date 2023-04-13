@@ -88,7 +88,10 @@
           {#each game.leaderboard as player, i}
             {#if player.nickname != "host"}
               <tr>
-                <td>{medals[i % medals.length]}{player.nickname}</td>
+                <td
+                  >{medals.charAt(i * 2) +
+                    medals.charAt(i * 2 + 1)}{player.nickname}</td
+                >
                 <td>{player.score}</td>
               </tr>
             {/if}
@@ -108,7 +111,11 @@
         {#each game.leaderboard as player, i}
           {#if player.nickname != "host"}
             <tr>
-              <td>{medals[i % medals.length]}{player.nickname}</td>
+              <td
+                >{medals.charAt(i * 2) +
+                  medals.charAt(i * 2 + 1)}{player.nickname}</td
+              >
+
               <td>{player.score}</td>
             </tr>
           {/if}
