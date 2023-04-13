@@ -55,6 +55,7 @@
     <div class="block" id="players">{game.player_count} Players</div>
     <div class="block">
       <button class="green" on:click={start_game}>Start Game</button>
+      <h1>GPTQuiz.xyz</h1>
     </div>
   {/if}
 
