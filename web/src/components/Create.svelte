@@ -79,8 +79,7 @@
   };
 
   const create_quiz = () => {
-    const url = "https://gptquiz.xyz/api/quiz";
-    // const url = "http://localhost:5005/quiz";
+    const url = import.meta.env.VITE_REST_BASE_URL + "/quiz";
     fetch(url, {
       method: "POST",
       headers: {

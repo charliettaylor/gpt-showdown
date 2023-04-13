@@ -59,8 +59,7 @@
   let error = "";
 
   onMount(() => {
-    const url = "wss://gptquiz.xyz/ws";
-    // const url = "ws://localhost:5005/ws";
+    const url = import.meta.env.VITE_WS_BASE_URL;
     ws = new WebSocket(url);
 
     ws.addEventListener("open", (event) => {

@@ -14,8 +14,7 @@
   let quizzes = [];
 
   onMount(async () => {
-    const url = "https://gptquiz.xyz/api/get_quizzes";
-    // const url = "http://localhost:5005/get_quizzes";
+    const url = import.meta.env.VITE_REST_BASE_URL + "/get_quizzes";
     const res = await fetch(url);
     quizzes = await res.json();
   });

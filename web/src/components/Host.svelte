@@ -18,7 +18,9 @@
 </script>
 
 <div id="main" class="block">
-  <footer><a href="/">Go Back Home</a></footer>
+  {#if state != "host_game"}
+    <footer><a href="/">Go Back Home</a></footer>
+  {/if}
   {#if state == "quizzes"}
     <h1 class="block">Select a Quiz</h1>
     <h4>or</h4>

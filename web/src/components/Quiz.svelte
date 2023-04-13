@@ -10,8 +10,8 @@
   const dispatch = createEventDispatcher();
 
   const fetch_questions = async () => {
-    // const url = `http://localhost:5005/get_questions?quiz_id=${quiz.id}`;
-    const url = `https://gptquiz.xyz/api/get_questions?quiz_id=${quiz.id}`;
+    const url =
+      import.meta.env.VITE_REST_BASE_URL + `/get_questions?quiz_id=${quiz.id}`;
     const res = await fetch(url);
     questions = await res.json();
     let cleaned_questions = [];
