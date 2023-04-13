@@ -6,6 +6,8 @@
   let entered_name = false;
   let entered_code = false;
 
+  let medals = "🥇🥈🥉" + " ".repeat(999);
+
   let ws;
   let footer;
 
@@ -172,16 +174,21 @@
 
   {#if game.choice}
     <h1>Answer Submitted...</h1>
+    <h4>You Chose: {game.choice}</h4>
   {/if}
 
   {#if game.question && !game.choice}
+    <div class="question-text">{game.question.text}</div>
     <div id="answer_choices">
       {#each game.question.choices as choice, i}
-        <div class="choice {colors[i]}">
-          <button class={colors[i]} on:click={() => answer(choice.choice)}
-            >{choice.value}</button
+        {#if choice.value != "None"}
+          <div
+            class="choice {colors[i]}"
+            on:click={() => answer(choice.choice)}
           >
-        </div>
+            {choice.value}
+          </div>
+        {/if}
       {/each}
     </div>
   {/if}
@@ -190,9 +197,32 @@
     <h1>
       {game.answer}
     </h1>
+    <h3>{game.answer_text}</h3>
   {/if}
   {#if game.action != "PING"}
     <h4 id="nickname">{game.nickname ? game.nickname : ""}</h4>
+  {/if}
+  {#if game.state == "GAMEOVER"}
+    <h2>Game Over!</h2>
+    <div class="block">
+      <h2>Leaderboard</h2>
+    </div>
+    <table class="table">
+      <tbody class="tbody">
+        {#each game.leaderboard as player, i}
+          {#if player.nickname != "host"}
+            <tr>
+              <td
+                >{medals.charAt(i * 2) +
+                  medals.charAt(i * 2 + 1)}{player.nickname}</td
+              >
+
+              <td>{player.score}</td>
+            </tr>
+          {/if}
+        {/each}
+      </tbody>
+    </table>
   {/if}
 </div>
 
@@ -202,35 +232,58 @@
     grid-template-columns: 1fr 1fr;
     place-items: center;
     padding: 0;
-    width: 75vw;
   }
 
   @media (min-width: 851px) {
+    .question-text {
+      font-size: 2.45rem;
+      position: fixed;
+      top: 1%;
+      text-align: center;
+    }
     .choice {
-      min-width: 30vw;
-      max-width: 40vw;
+      min-width: 15vw;
       aspect-ratio: 1;
       margin: 2px;
+      border-radius: 5%;
+      border: 5px solid black;
+      font-size: 2.5rem;
     }
+
+    #answer_choices {
+      margin-top: 9vh;
+    }
+  }
+
+  .choice {
+    cursor: pointer;
+    margin-top: 1.2vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   @media (max-width: 850px) {
-    #answer_choices {
-      /* background-color: yellow; */
-      display: flex;
-      flex-direction: column;
+    .question-text {
+      font-size: 1.25rem;
+      margin-bottom: 3vh;
+      position: fixed;
+      width: 100%;
+      top: 5%;
     }
-    /* … */
-    .choice {
-      min-width: 100vw;
-      min-height: 20vh;
-      margin: 2px;
-    }
-  }
 
-  .choice > button {
-    width: 100%;
-    height: 100%;
+    .choice {
+      width: 100%;
+      height: 100%;
+      margin: 2px;
+      border: 3px solid black;
+      border-radius: 5px;
+      min-height: 18vh;
+    }
+
+    #answer_choices {
+      min-width: 98vw;
+    }
   }
 
   footer {
@@ -307,5 +360,38 @@
     top: 0;
     min-height: 90vh;
     min-width: 25vw;
+  }
+
+  .leader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  table,
+  tbody {
+    background: none;
+    border: 4px solid black;
+    border-radius: 10px;
+  }
+
+  h2 {
+    font-size: 2em;
+  }
+
+  td {
+    font-size: 3em;
+  }
+
+  #time {
+    position: absolute;
+    top: 3em;
+    right: 3em;
+    font-size: 2em;
+  }
+
+  #players {
+    font-size: 2em;
   }
 </style>

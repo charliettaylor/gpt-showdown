@@ -69,7 +69,9 @@
     <h1 style="margin-bottom: 1.3em;">{game.question.text}</h1>
     <div id="answer_choices">
       {#each game.question.choices as choice, i}
-        <div id={colors[i]} class="choice">{choice.value}</div>
+        {#if choice.value != "None"}
+          <div id={colors[i]} class="choice">{choice.value}</div>
+        {/if}
       {/each}
     </div>
   {/if}
