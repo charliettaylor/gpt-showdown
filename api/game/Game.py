@@ -101,7 +101,7 @@ class Game:
     async def next_question(self):
         self.check_answer()
         await self.broadcast("ANSWER")
-        await sleep(5)
+        await sleep(6)  # time spent looking at the answer leaderboard
         self.current_question_id += 1
         if self.current_question_id >= len(self.questions):
             await self.handle_end_game()
@@ -150,6 +150,11 @@ class Game:
                     ]
                 elif state == "ANSWER":
                     copy.answer = self.questions[self.current_question_id].answer
+                    copy.answer_text = (
+                        self.questions[self.current_question_id]
+                        .choices["ABCD".index(copy.answer)]
+                        .value
+                    )
                     copy.leaderboard = [
                         {"nickname": x.nickname, "score": x.score}
                         for x in list(

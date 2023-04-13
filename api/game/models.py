@@ -33,6 +33,7 @@ class Event(Player):
     state: str | None = "LOBBY"
     question: McQuestionDTO | None = None
     answer: str | None = None
+    answer_text: str | None = None
     leaderboard: list[PlayerDTO] | None = None
     player_count: int | None = 0
     error: str | None = None

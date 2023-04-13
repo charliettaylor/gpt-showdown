@@ -78,6 +78,7 @@
     <div class="leader">
       <div class="block">
         <h2>Answer: {game.answer}</h2>
+        <h3>Answer: {game.answer_text}</h3>
       </div>
       <div class="block">
         <h2>Leaderboard</h2>
