@@ -81,6 +81,7 @@
         error = msg.error;
         entered_code = false;
       }
+      console.log("message: ", msg);
 
       game = msg;
     });
@@ -191,6 +192,9 @@
       {game.answer}
     </h1>
   {/if}
+  {#if game.action != "PING"}
+    <h4 id="nickname">{game.nickname ? game.nickname : ""}</h4>
+  {/if}
 </div>
 
 <style>
@@ -291,6 +295,13 @@
     #main {
       margin-top: 15vh;
     }
+  }
+
+  #nickname {
+    position: fixed;
+    bottom: 1%;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   #main {

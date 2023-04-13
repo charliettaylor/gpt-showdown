@@ -67,7 +67,7 @@
 
   {#if game.question}
     <div id="time">{time}</div>
-    <h1 style="margin-botton: 1em;">{game.question.text}</h1>
+    <h1 style="margin-bottom: 1.3em;">{game.question.text}</h1>
     <div id="answer_choices">
       {#each game.question.choices as choice, i}
         <div id={colors[i]} class="choice">{choice.value}</div>
