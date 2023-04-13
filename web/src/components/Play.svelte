@@ -1,11 +1,13 @@
 <script>
   import { onMount } from "svelte";
+  import { slide } from "svelte/transition";
   import Shape from "./Shape.svelte";
 
   let entered_name = false;
   let entered_code = false;
 
   let ws;
+  let footer;
 
   let colors = ["red", "blue", "yellow", "green"];
 
@@ -19,6 +21,16 @@
     game.action = "SUBMIT";
     game.choice = choice;
     ws.send(JSON.stringify(game));
+  };
+
+  let show_footer = true;
+  const focus_input = () => {
+    // mostly for mobile compatability
+    show_footer = false;
+  };
+
+  const unfocus_input = () => {
+    show_footer = true;
   };
 
   const join_game = () => {
@@ -110,6 +122,8 @@
             <label for="code" class="label">Enter Game Code</label>
             <div class="control">
               <input
+                on:focusin={focus_input}
+                on:focusout={unfocus_input}
                 id="code_input"
                 name="code"
                 class="input"
@@ -123,19 +137,21 @@
           </div>
           <button on:click|preventDefault={handleCodeInput}>Join</button>
         </form>
-        <footer>
-          <div class="footer-container">
-            <div class="footer-element">
-              <small>Made by Team WebSockets for FullyHacks '23</small>
+        {#if show_footer}
+          <footer bind:this={footer} transition:slide>
+            <div class="footer-container">
+              <div class="footer-element">
+                <small>Made by Team WebSockets for FullyHacks '23</small>
+              </div>
+              <div class="footer-element footer-center">
+                <a href="/host">Create a Quiz</a>
+              </div>
+              <div class="footer-element">
+                <small />
+              </div>
             </div>
-            <div class="footer-element footer-center">
-              <a href="/host">Create a Quiz</a>
-            </div>
-            <div class="footer-element">
-              <small />
-            </div>
-          </div>
-        </footer>
+          </footer>
+        {/if}
       {/if}
     </div>
   {/if}
