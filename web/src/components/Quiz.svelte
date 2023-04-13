@@ -11,7 +11,7 @@
 
   const fetch_questions = async () => {
     // const url = `http://localhost:5005/get_questions?quiz_id=${quiz.id}`;
-    const url = `https://gptquiz.xyz/get_questions?quiz_id=${quiz.id}`;
+    const url = `https://gptquiz.xyz/api/get_questions?quiz_id=${quiz.id}`;
     const res = await fetch(url);
     questions = await res.json();
     let cleaned_questions = [];
